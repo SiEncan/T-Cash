@@ -95,7 +95,7 @@ class _HomeTabState extends State<HomeTab> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(top: 30), // Padding ke atas layar hp
+            padding: const EdgeInsets.only(top: 42), // Padding ke atas layar hp
             height: 106, // Tinggi Container
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 0, 124, 226),
@@ -144,7 +144,6 @@ class _HomeTabState extends State<HomeTab> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16), // Jarak di bawah tulisan
               ],
             ),
           ),
