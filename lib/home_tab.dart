@@ -1,3 +1,4 @@
+import 'package:fintar/pulsa.dart';
 import 'package:flutter/material.dart';
 
 class HomeTab extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomeTabState extends State<HomeTab> {
                 // kumpulan icon fitur
                 Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -32,7 +33,7 @@ class _HomeTabState extends State<HomeTab> {
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 4,
-                        offset: Offset(0, 4),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
@@ -43,35 +44,45 @@ class _HomeTabState extends State<HomeTab> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _featureIcon(Icons.phone, 'Pulsa/Paket Data', () {
-                              // gesture
+                            _featureIcon(Icons.phone, 'Pulsa/Data', Colors.blue,
+                                () {
+                              Navigator.of(context)
+                                  .push(_createRoute(const Pulsa()));
                             }),
-                            _featureIcon(Icons.card_giftcard, 'Digital Voucher',
+                            _featureIcon(
+                                Icons.card_giftcard, 'Voucher', Colors.blue,
                                 () {
                               // gesture
                             }),
-                            _featureIcon(Icons.local_movies, 'TIX ID', () {
+                            _featureIcon(
+                                Icons.local_movies, 'TIX ID', Colors.blue, () {
                               // gesture
                             }),
-                            _featureIcon(Icons.line_axis, 'Investasi', () {
+                            _featureIcon(
+                                Icons.line_axis, 'Investasi', Colors.blue, () {
                               // gesture
                             }),
                           ],
                         ),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _featureIcon(Icons.apple, 'Apple Zone', () {
+                            _featureIcon(Icons.apple, 'Apple Zone', Colors.blue,
+                                () {
                               // gesture
                             }),
                             _featureIcon(
-                                Icons.electric_bolt_sharp, 'Token Listrik', () {
+                                Icons.electric_bolt_sharp, 'PLN', Colors.blue,
+                                () {
                               // gesture
                             }),
-                            _featureIcon(Icons.receipt, 'Pajak', () {
+                            _featureIcon(Icons.receipt, 'Pajak', Colors.blue,
+                                () {
                               // gesture
                             }),
-                            _featureIcon(Icons.gavel, 'Beli Emas', () {
+                            _featureIcon(Icons.gavel, 'Beli Emas', Colors.blue,
+                                () {
                               // gesture
                             }),
                           ],
@@ -162,14 +173,15 @@ class _BalanceDisplay extends StatelessWidget {
   }
 }
 
-Widget _featureIcon(IconData icon, String label, VoidCallback onTap) {
+Widget _featureIcon(
+    IconData icon, String label, Color color, VoidCallback onTap) {
   return GestureDetector(
     onTap: onTap,
     child: Column(
-      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.start,
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 30, color: Colors.blue),
+        Icon(icon, size: 30, color: color),
         const SizedBox(height: 8), // Jarak antara icon dan label
         Text(
           label,
@@ -178,5 +190,24 @@ Widget _featureIcon(IconData icon, String label, VoidCallback onTap) {
         ),
       ],
     ),
+  );
+}
+
+Route _createRoute(Widget widget) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widget,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(2.0, 0.0); // Mulai dari kanan
+      const end = Offset.zero; // Akhir di posisi normal
+      const curve = Curves.easeInOut;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    },
   );
 }
