@@ -187,24 +187,32 @@ class _HomeTabState extends State<HomeTab> {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      const Row(
+                      Row(
                         // mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
+                          const Text(
                             style: TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.bold),
                             "Feeds",
                             textAlign: TextAlign.right,
                           ),
-                          Spacer(),
-                          Text(
-                            style: TextStyle(
-                              fontSize: 12,
-                              decoration: TextDecoration.underline,
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Pulsa()),
+                              );
+                            },
+                            child: const Text(
+                              "View All",
+                              style: TextStyle(
+                                fontSize: 12,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
-                            "View All",
-                            textAlign: TextAlign.right,
-                          )
+                          ),
                         ],
                       )
                     ],
