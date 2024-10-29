@@ -120,7 +120,7 @@ class _HomeTabState extends State<HomeTab> {
                             style: TextStyle(fontSize: 12),
                           ),
                           const SizedBox(width: 6),
-                          Icon(Icons.celebration,
+                          Icon(Icons.send_and_archive_outlined,
                               size: 20, color: Colors.blue[400]),
                           const Spacer(),
                           const Text(
@@ -147,7 +147,7 @@ class _HomeTabState extends State<HomeTab> {
                             style: TextStyle(fontSize: 12),
                           ),
                           const SizedBox(width: 6),
-                          Icon(Icons.celebration,
+                          Icon(Icons.send_and_archive_outlined,
                               size: 20, color: Colors.blue[400]),
                           const Spacer(),
                           const Text(
