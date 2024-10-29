@@ -24,7 +24,8 @@ class _HomeTabState extends State<HomeTab> {
                 // kumpulan icon fitur
                 Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                      // const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                      const EdgeInsets.fromLTRB(12, 20, 12, 10),
                   padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -32,7 +33,7 @@ class _HomeTabState extends State<HomeTab> {
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
-                        blurRadius: 1,
+                        blurRadius: 2,
                         // offset: Offset(0, 2),
                       ),
                     ],
@@ -95,7 +96,7 @@ class _HomeTabState extends State<HomeTab> {
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
-                        blurRadius: 1,
+                        blurRadius: 2,
                         // offset: Offset(0, 2),
                       ),
                     ],
@@ -183,6 +184,27 @@ class _HomeTabState extends State<HomeTab> {
                             "26/10",
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      const Row(
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                            "Feeds",
+                            textAlign: TextAlign.right,
+                          ),
+                          Spacer(),
+                          Text(
+                            style: TextStyle(
+                              fontSize: 12,
+                              decoration: TextDecoration.underline,
+                            ),
+                            "View All",
+                            textAlign: TextAlign.right,
+                          )
                         ],
                       )
                     ],
