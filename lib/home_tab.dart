@@ -2,6 +2,7 @@ import 'package:fintar/pulsa.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/widgets/top_balance_widget.dart';
 import 'package:fintar/widgets/carousel_widget.dart';
+import 'package:fintar/widgets/deals_widget.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -239,7 +240,8 @@ class HomeTab extends StatelessWidget {
                       // Carousel Slider
                       const Padding(
                           padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: CarouselWidget())
+                          child: CarouselWidget()),
+                      const DealsAndDiscounts()
                     ],
                   ),
                 ),

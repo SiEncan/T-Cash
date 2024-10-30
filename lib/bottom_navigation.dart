@@ -29,6 +29,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         margin: const EdgeInsets.all(10),
