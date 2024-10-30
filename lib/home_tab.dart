@@ -1,6 +1,7 @@
 import 'package:fintar/pulsa.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/widgets/top_balance_widget.dart';
+import 'package:fintar/widgets/carousel_widget.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -21,7 +22,7 @@ class HomeTab extends StatelessWidget {
                   Positioned(
                     top: 62, // posisi dari atas
                     child: Image.asset(
-                      'img/ads.jpg',
+                      'img/banners/ads.jpg',
                       width: 412,
                       height: 200,
                     ),
@@ -99,6 +100,7 @@ class HomeTab extends StatelessWidget {
                           ],
                         ),
                       ),
+                      // notif
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 12),
                         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
@@ -234,6 +236,10 @@ class HomeTab extends StatelessWidget {
                           ],
                         ),
                       ),
+                      // Carousel Slider
+                      const Padding(
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: CarouselWidget())
                     ],
                   ),
                 ),
