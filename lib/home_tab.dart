@@ -46,7 +46,7 @@ class _HomeTabState extends State<HomeTab> {
                           _featureIcon(Icons.phone, 'Pulsa/Data', Colors.blue,
                               () {
                             Navigator.of(context)
-                                .push(_createRoute(const Pulsa()));
+                                .push(_createRoute(const Pulsa(), 2.0, 0));
                           }),
                           _featureIcon(
                               Icons.card_giftcard, 'Voucher', Colors.blue, () {
@@ -199,11 +199,8 @@ class _HomeTabState extends State<HomeTab> {
                           const Spacer(),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Pulsa()),
-                              );
+                              Navigator.of(context)
+                                  .push(_createRoute(const Pulsa(), 0, 1.0));
                             },
                             child: const Text(
                               "View All",
@@ -319,11 +316,11 @@ Widget _featureIcon(
   );
 }
 
-Route _createRoute(Widget widget) {
+Route _createRoute(Widget widget, double x, double y) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => widget,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(2.0, 0.0); // Mulai dari kanan
+      var begin = Offset(x, y); // Mulai dari mana
       const end = Offset.zero; // Akhir di posisi normal
       const curve = Curves.easeInOut;
 

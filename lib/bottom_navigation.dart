@@ -31,11 +31,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
+        margin: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(30),
-          ),
+              top: Radius.circular(30), bottom: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
