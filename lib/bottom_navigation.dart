@@ -15,7 +15,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
   final List<Widget> _pages = [
     const HomeTab(),
     const Center(child: Text('Activity', style: TextStyle(fontSize: 24))),
-    const Center(child: Text('QR', style: TextStyle(fontSize: 24))),
     const Center(child: Text('Transaction', style: TextStyle(fontSize: 24))),
     const Center(child: Text('Profile', style: TextStyle(fontSize: 24))),
   ];
@@ -29,6 +28,50 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 60),
+        child: SizedBox(
+          width: 80,
+          height: 80,
+          child: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 36, 142, 255),
+                  Color.fromARGB(255, 31, 135, 255),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: FloatingActionButton(
+              shape: const CircleBorder(),
+              backgroundColor: Colors.transparent,
+              onPressed: () {},
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.qr_code_scanner_rounded,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 1),
+                  Text(
+                    "PAY",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
@@ -56,8 +99,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   icon: Icon(Icons.home_outlined), label: 'Home'),
               NavigationDestination(
                   icon: Icon(Icons.receipt_long_outlined), label: 'Activity'),
-              NavigationDestination(
-                  icon: Icon(Icons.qr_code_scanner_rounded), label: 'QRIS'),
+              SizedBox(width: 1),
               NavigationDestination(
                   icon: Icon(Icons.attach_money), label: 'Transaction'),
               NavigationDestination(
