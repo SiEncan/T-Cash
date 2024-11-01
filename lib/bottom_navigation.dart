@@ -23,9 +23,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index != 2) {
+      // menghindari akses index 2
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
