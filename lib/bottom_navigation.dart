@@ -15,6 +15,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
   final List<Widget> _pages = [
     const HomeTab(),
     const Center(child: Text('Activity', style: TextStyle(fontSize: 24))),
+    const Center(
+        child:
+            Text('SIZE BOX', style: TextStyle(fontSize: 24))), // INACCESSIBLE
     const Center(child: Text('Transaction', style: TextStyle(fontSize: 24))),
     const Center(child: Text('Profile', style: TextStyle(fontSize: 24))),
   ];
