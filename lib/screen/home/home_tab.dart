@@ -1,8 +1,8 @@
-import 'package:fintar/pulsa.dart';
+import 'package:fintar/screen/home/widgets/pulsa.dart';
 import 'package:flutter/material.dart';
-import 'package:fintar/widgets/top_balance_widget.dart';
-import 'package:fintar/widgets/carousel_widget.dart';
-import 'package:fintar/widgets/deals_widget.dart';
+import 'package:fintar/screen/home/widgets/top_balance_widget.dart';
+import 'package:fintar/screen/home/widgets/carousel_widget.dart';
+import 'package:fintar/screen/home/widgets/deals_widget.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});

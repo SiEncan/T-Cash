@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fintar/welcome_screen.dart';
-import 'package:fintar/bottom_navigation.dart';
+import 'package:fintar/screen/auth/welcome_screen.dart';
+import 'package:fintar/widgets/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

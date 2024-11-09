@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fintar/home_tab.dart';
-import 'package:fintar/logout_screen.dart';
+import 'package:fintar/screen/home/home_tab.dart';
+import 'package:fintar/screen/auth/logout_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});

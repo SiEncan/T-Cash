@@ -1,3 +1,4 @@
+import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'create_account2.dart';
 
@@ -215,20 +216,24 @@ class _CreateAccountPage1State extends State<CreateAccountPage1> {
                 // Tombol Next
                 ElevatedButton(
                   onPressed: () {
-                    // Menyembunyikan snackbar yang sedang tampil jika ada agar tidak menyebabkan notifikasi berlebihan
-                    ScaffoldMessenger.of(context).clearSnackBars();
                     if (passwordController.text !=
                         confirmPasswordController.text) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Passwords do not match')),
+                      showCustomDialog(
+                        context: context,
+                        imagePath: 'img/failed.png',
+                        message: 'Passwords do not match',
+                        height: 100,
+                        buttonColor: Colors.red,
                       );
                     } else if (emailController.text.trim() == '' ||
                         passwordController.text.trim() == '' ||
                         confirmPasswordController.text.trim() == '') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text('Please input all information above')),
+                      showCustomDialog(
+                        context: context,
+                        imagePath: 'img/form_failed.png',
+                        message: 'Please fill all fields above',
+                        height: 100,
+                        buttonColor: Colors.red,
                       );
                     } else {
                       Navigator.push(

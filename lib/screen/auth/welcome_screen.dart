@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fintar/login.dart';
+import 'package:fintar/screen/auth/login.dart';
 import 'create_account1.dart';
 
 class WelcomeScreen extends StatelessWidget {

@@ -1,4 +1,5 @@
-import 'package:fintar/login.dart';
+import 'package:fintar/screen/auth/login.dart';
+import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -100,14 +101,17 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                 minimumSize: Size(double.infinity, 50),
               ),
               onPressed: () async {
-                // Menyembunyikan snackbar yang sedang tampil jika ada agar tidak menyebabkan notifikasi berlebihan
-                ScaffoldMessenger.of(context).clearSnackBars();
                 // Validasi input
                 if (nameController.text.isEmpty ||
                     addressController.text.isEmpty ||
                     phoneNumberController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please fill all fields")));
+                  showCustomDialog(
+                    context: context,
+                    imagePath: 'img/form_failed.png',
+                    message: 'Please fill all fields above',
+                    height: 100,
+                    buttonColor: Colors.red,
+                  );
                   return;
                 }
 
@@ -122,8 +126,13 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
 
                 if (querySnapshot.docs.isNotEmpty) {
                   // Jika ada dokumen yang ditemukan, artinya nomor telepon sudah terdaftar
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Phone number already registered.")));
+                  showCustomDialog(
+                    context: context,
+                    imagePath: 'img/phone_failed.png',
+                    message: 'Phone number already registered',
+                    height: 100,
+                    buttonColor: Colors.red,
+                  );
                   return;
                 }
 
@@ -161,12 +170,12 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                   });
 
                   // Navigasi ke halaman utama setelah berhasil
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Account created successfully")));
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
+                          builder: (context) => const LoginScreen(
+                                showDialog: true,
+                              )));
                 } on FirebaseAuthException catch (e) {
                   String errorMessage;
 
@@ -189,12 +198,22 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                       errorMessage =
                           'An unknown error occurred. Please try again later.';
                   }
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(errorMessage)));
+                  showCustomDialog(
+                    context: context,
+                    imagePath: 'img/failed.png',
+                    message: errorMessage,
+                    height: 100,
+                    buttonColor: Colors.red,
+                  );
                 } catch (e) {
                   // Tampilkan pesan error umum jika error bukan dari FirebaseAuth
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("An error occurred. Please try again.")));
+                  showCustomDialog(
+                    context: context,
+                    imagePath: 'img/failed.png',
+                    message: 'An error occurred. Please try again.',
+                    height: 100,
+                    buttonColor: Colors.red,
+                  );
                 }
               },
               child: Text(

@@ -1,10 +1,12 @@
+import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'bottom_navigation.dart';
+import '../../widgets/bottom_navigation.dart';
 import 'create_account1.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final bool showDialog;
+  const LoginScreen({super.key, this.showDialog = false});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -18,6 +20,23 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   static const Color primaryColor = Color(0xFF1A87DD); // biru
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.showDialog) {
+      // Menampilkan dialog success jika showDialog bernilai true
+      Future.delayed(const Duration(milliseconds: 500), () {
+        showCustomDialog(
+          context: context,
+          imagePath: 'img/success.png',
+          message: 'Account created successfully',
+          height: 100,
+          buttonColor: Colors.green,
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,9 +291,14 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email dan password tidak boleh kosong')),
+      showCustomDialog(
+        context: context,
+        imagePath: 'img/failed.png',
+        message: 'Email dan password tidak boleh kosong!',
+        height: 100,
+        buttonColor: Colors.red,
       );
+
       return;
     }
     try {
@@ -293,27 +317,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
       switch (e.code) {
         case 'invalid-email':
-          errorMessage = 'Wrong Password/Email.';
+          errorMessage = 'Wrong Password/Email';
           break;
         case 'user-not-found':
-          errorMessage = 'User not found.';
+          errorMessage = 'User not found';
           break;
         case 'wrong-password':
-          errorMessage = 'Wrong Password/Email.';
+          errorMessage = 'Wrong Password/Email';
           break;
         case 'too-many-requests':
-          errorMessage = 'Too many attempt, please try again later.';
+          errorMessage = 'Too many attempt, please try again later';
           break;
         default:
-          errorMessage = 'An unknown error occurred. Please try again later.';
+          errorMessage = 'An unknown error occurred. Please try again later';
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
+      showCustomDialog(
+        context: context,
+        imagePath: 'img/failed.png',
+        message: errorMessage,
+        height: 100,
+        buttonColor: Colors.red,
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
+      showCustomDialog(
+        context: context,
+        imagePath: 'img/failed.png',
+        message: e.toString(),
+        height: 100,
+        buttonColor: Colors.red,
       );
     } finally {
       setState(() {
