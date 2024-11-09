@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fintar/home_tab.dart';
+import 'package:fintar/logout_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -19,7 +20,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         child:
             Text('SIZE BOX', style: TextStyle(fontSize: 24))), // INACCESSIBLE
     const Center(child: Text('Transaction', style: TextStyle(fontSize: 24))),
-    const Center(child: Text('Profile', style: TextStyle(fontSize: 24))),
+    const logoutScreen(),
   ];
 
   void _onItemTapped(int index) {
