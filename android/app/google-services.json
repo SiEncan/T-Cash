@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "59613272521",
+    "project_id": "taruma-cash",
+    "storage_bucket": "taruma-cash.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59613272521:android:b7f7a90c86846f2c98f018",
+        "android_client_info": {
+          "package_name": "com.example.fintar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59613272521-tvbcoph60bvsddt95d7d8rht91nougit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvOTeTTNQ8jTwrVvGX-Ed270AULNcQoks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59613272521-tvbcoph60bvsddt95d7d8rht91nougit.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "59613272521-h73dvpqujop8ti3apcukiuneiu508aqh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fintar"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59613272521:android:6fdf75b9abd1d8ea98f018",
+        "android_client_info": {
+          "package_name": "com.example.tarumacash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59613272521-f21ubkmisp3259rj7qq4e6q2n0sgh61q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tarumacash",
+            "certificate_hash": "46af372a6fb3350f674b13202372a84fbd625f8e"
+          }
+        },
+        {
+          "client_id": "59613272521-tvbcoph60bvsddt95d7d8rht91nougit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvOTeTTNQ8jTwrVvGX-Ed270AULNcQoks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59613272521-tvbcoph60bvsddt95d7d8rht91nougit.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "59613272521-h73dvpqujop8ti3apcukiuneiu508aqh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fintar"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
