@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fintar/login.dart';
+import 'create_account1.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const Color primaryColor = Color(0xFF1A87DD);
@@ -58,7 +59,12 @@ class WelcomeScreen extends StatelessWidget {
       width: size.width - (horizontalPadding * 2),
       height: buttonHeight,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CreateAccountPage1()));
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
