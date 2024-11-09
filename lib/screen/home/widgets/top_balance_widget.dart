@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class BalanceDisplayWidget extends StatefulWidget {
   const BalanceDisplayWidget({super.key});
@@ -9,10 +12,19 @@ class BalanceDisplayWidget extends StatefulWidget {
 }
 
 class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
-  bool _isBalanceVisible = false; // Inisialisasi dengan default false
+  bool _isBalanceVisible = true; // Inisialisasi dengan default false
+  int saldo = 0;
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      // Jika user tidak ditemukan, tampilkan pesan atau redirect
+      return const Text("User not logged in.");
+    }
+
     return Container(
       padding: const EdgeInsets.only(top: 42), // Padding ke atas layar hp
       height: 106, // Tinggi Container
@@ -43,8 +55,30 @@ class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
                   size: 28,
                 ),
               ),
-              // Widget menampilkan saldo
-              _BalanceDisplay(isVisible: _isBalanceVisible),
+              // Widget menampilkan saldo / Menampilkan loading jika data sedang diambil
+              StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user
+                        .uid) // Menggunakan user UID untuk mendapatkan dokumen
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    ); // Menunggu data
+                  }
+
+                  var userDoc = snapshot.data!;
+                  var balance = userDoc['saldo'] ?? 0;
+
+                  return _BalanceDisplay(
+                    isVisible: _isBalanceVisible,
+                    saldo: balance,
+                  );
+                },
+              ),
+
               // Tombol hide/unhide saldo
               IconButton(
                 icon: Icon(
@@ -66,15 +100,23 @@ class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
   }
 }
 
+String formatSaldo(int saldo) {
+  final formatter = NumberFormat('#,###');
+  return formatter.format(saldo);
+}
+
 class _BalanceDisplay extends StatelessWidget {
   final bool isVisible;
+  final int saldo;
 
-  const _BalanceDisplay({required this.isVisible});
+  const _BalanceDisplay({required this.isVisible, required this.saldo});
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      isVisible ? 'RP 37.450' : '*****', // saldo atau tanda bintang
+      isVisible
+          ? 'RP ${formatSaldo(saldo)}'
+          : '*****', // saldo atau tanda bintang
       style: const TextStyle(
         color: Colors.white,
         fontSize: 24,
