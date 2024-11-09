@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fintar/login.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const Color primaryColor = Color(0xFF1A87DD);
@@ -38,10 +39,10 @@ class WelcomeScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildCreateAccountButton(size),
+                    _buildCreateAccountButton(context, size),
                     SizedBox(
                         height: size.height * 0.015), // 1.5% dari tinggi layar
-                    _buildLoginButton(size),
+                    _buildLoginButton(context, size),
                   ],
                 ),
               ),
@@ -52,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCreateAccountButton(Size size) {
+  Widget _buildCreateAccountButton(BuildContext context, Size size) {
     return SizedBox(
       width: size.width - (horizontalPadding * 2),
       height: buttonHeight,
@@ -77,9 +78,15 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginButton(Size size) {
+  Widget _buildLoginButton(
+    BuildContext context,
+    Size size,
+  ) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      },
       style: TextButton.styleFrom(
         foregroundColor: primaryColor,
         minimumSize: Size(size.width - (horizontalPadding * 2), buttonHeight),
