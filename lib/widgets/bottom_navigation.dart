@@ -1,6 +1,6 @@
+import 'package:fintar/screen/auth/logout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/home_tab.dart';
-import 'package:fintar/screen/auth/logout_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -35,67 +35,73 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 60),
-        child: SizedBox(
-          width: 80,
-          height: 80,
-          child: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 36, 142, 255),
-                  Color.fromARGB(255, 31, 135, 255),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: FloatingActionButton(
-              shape: const CircleBorder(),
-              backgroundColor: Colors.transparent,
-              onPressed: () {},
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.qr_code_scanner_rounded,
-                    size: 40,
-                    color: Colors.white,
+      extendBody: true,
+      body: Stack(
+        children: [
+          _pages[_selectedIndex],
+          Positioned(
+            bottom: 45,
+            left: MediaQuery.of(context).size.width * 0.5 - 40,
+            child: SizedBox(
+              width: 80,
+              height: 80,
+              child: Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 36, 142, 255),
+                      Color.fromARGB(255, 31, 135, 255),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  SizedBox(height: 1),
-                  Text(
-                    "PAY",
-                    style: TextStyle(
-                        fontSize: 12,
+                ),
+                child: FloatingActionButton(
+                  shape: const CircleBorder(),
+                  backgroundColor: Colors.transparent,
+                  onPressed: () {},
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.qr_code_scanner_rounded,
+                        size: 40,
                         color: Colors.white,
-                        fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(height: 1),
+                      Text(
+                        "PAY",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      extendBody: true,
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-              top: Radius.circular(30), bottom: Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: NavigationBar(
+      bottomNavigationBar: ClipPath(
+        clipper: _NavigationBarClipper(),
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30), bottom: Radius.circular(30)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: NavigationBar(
             height: 80,
             elevation: 0,
             selectedIndex: _selectedIndex,
@@ -111,8 +117,36 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   icon: Icon(Icons.attach_money), label: 'Transaction'),
               NavigationDestination(
                   icon: Icon(Icons.person_4_outlined), label: 'Profile'),
-            ]),
+            ],
+          ),
+        ),
       ),
     );
   }
+}
+
+class _NavigationBarClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.addRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        const Radius.circular(30),
+      ),
+    );
+
+    path.addOval(
+      Rect.fromCircle(
+        center: Offset(size.width * 0.5, 15),
+        radius: 45,
+      ),
+    );
+
+    path.fillType = PathFillType.evenOdd;
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
