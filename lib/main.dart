@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fintar/splash_screen.dart';
+import 'welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Flutter Demo',
-      home: SplashScreen(),
+      home: WelcomeScreen(),
     );
   }
 }
