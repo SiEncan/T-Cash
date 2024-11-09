@@ -116,7 +116,7 @@ class _BalanceDisplay extends StatelessWidget {
     return Text(
       isVisible
           ? 'RP ${formatSaldo(saldo)}'
-          : '*****', // saldo atau tanda bintang
+          : 'RP *****', // saldo atau tanda bintang
       style: const TextStyle(
         color: Colors.white,
         fontSize: 24,
