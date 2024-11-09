@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'bottom_navigation.dart';
+import 'create_account1.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -235,7 +236,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Tombol Create new account
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CreateAccountPage1()));
+                  },
                   child: Text(
                     'Create new account',
                     style: TextStyle(
