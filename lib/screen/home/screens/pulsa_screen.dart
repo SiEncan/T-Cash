@@ -13,6 +13,7 @@ class PulsaScreen extends StatefulWidget {
 class _PulsaScreenState extends State<PulsaScreen> {
   final phoneNumberController = TextEditingController();
   final nameController = TextEditingController();
+  String selectedProvider = 'IM3';
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +39,18 @@ class _PulsaScreenState extends State<PulsaScreen> {
                 user: user,
                 phoneNumberController: phoneNumberController,
                 nameController: nameController,
+                selectedProviderParam: selectedProvider,
+                onProviderSelected: (provider) {
+                  setState(() {
+                    selectedProvider = provider; // Update selected provider
+                  });
+                },
               ),
               const SizedBox(height: 10),
-              Expanded(child: PulsaGrid())
+              Expanded(
+                  child: PulsaGrid(
+                selectedProviderParam: selectedProvider,
+              ))
             ],
           ),
         ),

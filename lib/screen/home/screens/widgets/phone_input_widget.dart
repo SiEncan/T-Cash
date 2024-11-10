@@ -6,12 +6,16 @@ class PhoneNumberInput extends StatefulWidget {
   final User user;
   final TextEditingController phoneNumberController;
   final TextEditingController nameController;
+  String selectedProviderParam;
+  final Function(String) onProviderSelected;
 
-  const PhoneNumberInput({
+  PhoneNumberInput({
     super.key,
     required this.user,
     required this.phoneNumberController,
     required this.nameController,
+    required this.selectedProviderParam,
+    required this.onProviderSelected,
   });
 
   @override
@@ -53,7 +57,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(
-                Icons.contacts_outlined,
+                Icons.contacts,
                 size: 24,
                 color: Colors.black54,
               ),
@@ -173,10 +177,51 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                   ],
                 ),
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: providerSelect(),
+                ),
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  DropdownButtonHideUnderline providerSelect() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        menuWidth: 130,
+        borderRadius: BorderRadius.circular(16),
+        value: widget.selectedProviderParam, // selected value
+        onChanged: (String? newValue) {
+          setState(() {
+            widget.selectedProviderParam = newValue!;
+            widget.onProviderSelected(
+                newValue!); // oper ke parent screen ketika berubah
+          });
+        },
+        items: <String>['IM3', 'telkomsel', 'XL']
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'img/$value.png',
+                  width: 80,
+                  height: 60,
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
