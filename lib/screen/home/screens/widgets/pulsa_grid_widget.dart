@@ -4,6 +4,7 @@ import 'package:fintar/screen/home/screens/widgets/pulsa_card_widget.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/services/saldo_services.dart';
 import 'package:fintar/services/transaction_services.dart';
+import 'package:fintar/screen/auth/verif.dart';
 
 // ignore: must_be_immutable
 class PulsaGrid extends StatelessWidget {
@@ -324,21 +325,27 @@ class PulsaGrid extends StatelessWidget {
                                   int hargaFormatted = int.parse(
                                       hargaPulsa[index].replaceAll('.', ''));
 
-                                  bool isSaldoSufficient = await _saldoService
-                                      .reduceSaldo(userId, hargaFormatted);
-
                                   if (phoneNumber.trim() == '') {
                                     Navigator.pop(context);
 
-                                    showCustomDialog(
+                                    return showCustomDialog(
                                       context: context,
                                       imagePath: 'img/failed.png',
                                       message: 'Please fill out phone number.',
                                       height: 100,
                                       buttonColor: Colors.red,
                                     );
+                                  }
+
+                                  bool isPasscodeTrue =
+                                      await PasscodeModal.showPasscodeModal(
+                                          context);
+                                  if (!isPasscodeTrue) {
                                     return;
                                   }
+
+                                  bool isSaldoSufficient = await _saldoService
+                                      .reduceSaldo(userId, hargaFormatted);
 
                                   if (isSaldoSufficient) {
                                     await _transactionService.saveTransaction(
@@ -353,7 +360,7 @@ class PulsaGrid extends StatelessWidget {
                                       context: context,
                                       imagePath: 'img/success.png',
                                       message:
-                                          'Purchase successful. Your credits will be applied shortly.',
+                                          'Payment confirmed! Your purchase is being processed.',
                                       height: 100,
                                       buttonColor: Colors.green,
                                     );
