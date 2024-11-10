@@ -1,4 +1,5 @@
 import 'package:fintar/screen/auth/logout_screen.dart';
+import 'package:fintar/services/update_display_name.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/home_tab.dart';
 
@@ -30,6 +31,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
         _selectedIndex = index;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateDisplayNameFromFirestore();
   }
 
   @override

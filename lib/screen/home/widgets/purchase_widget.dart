@@ -1,4 +1,4 @@
-import 'package:fintar/screen/home/widgets/pulsa.dart';
+import 'package:fintar/screen/home/screens/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 
@@ -30,9 +30,9 @@ class PurchaseMenu extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(
                     8.0), // Adjusts spacing around each icon
-                child: _featureIcon(Icons.phone, 'Pulsa/Data', Colors.blue, () {
+                child: _featureIcon(Icons.phone, 'Pulsa', Colors.blue, () {
                   Navigator.of(context)
-                      .push(createRoute(const Pulsa(), 2.0, 0));
+                      .push(createRoute(const PulsaScreen(), 2.0, 0));
                 }),
               ),
               Padding(

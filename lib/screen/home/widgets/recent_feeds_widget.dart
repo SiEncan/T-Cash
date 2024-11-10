@@ -1,4 +1,4 @@
-import 'package:fintar/screen/home/widgets/pulsa.dart';
+import 'package:fintar/screen/home/screens/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 
@@ -99,7 +99,8 @@ class RecentFeeds extends StatelessWidget {
             const Spacer(),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(createRoute(const Pulsa(), 0, 1.0));
+                Navigator.of(context)
+                    .push(createRoute(const PulsaScreen(), 0, 1.0));
               },
               child: const Text(
                 "View All",

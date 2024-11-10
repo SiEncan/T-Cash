@@ -322,11 +322,11 @@ class _LoginScreenState extends State<LoginScreen> {
         case 'user-not-found':
           errorMessage = 'User not found';
           break;
-        case 'wrong-password':
+        case 'invalid-credential':
           errorMessage = 'Wrong Password/Email';
           break;
         case 'too-many-requests':
-          errorMessage = 'Too many attempt, please try again later';
+          errorMessage = 'Too many attempts, please try again later';
           break;
         default:
           errorMessage = 'An unknown error occurred. Please try again later';
