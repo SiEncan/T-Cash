@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore: must_be_immutable
 class PhoneNumberInput extends StatefulWidget {
   final User user;
   final TextEditingController phoneNumberController;
   final TextEditingController nameController;
   String selectedProviderParam;
   final Function(String) onProviderSelected;
+  final ValueChanged<String> onNameChanged;
+  final ValueChanged<String> onPhoneNumberChanged;
 
   PhoneNumberInput({
     super.key,
@@ -16,6 +19,8 @@ class PhoneNumberInput extends StatefulWidget {
     required this.nameController,
     required this.selectedProviderParam,
     required this.onProviderSelected,
+    required this.onNameChanged,
+    required this.onPhoneNumberChanged,
   });
 
   @override
@@ -24,6 +29,7 @@ class PhoneNumberInput extends StatefulWidget {
 
 class _PhoneNumberInputState extends State<PhoneNumberInput> {
   String currentPhoneNumber = '';
+  String currentName = '';
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -82,10 +88,14 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                             ? snapshot.data!.docs.first
                             : null;
 
-                        if (widget.phoneNumberController.text == '') {
+                        if (widget.phoneNumberController.text.isEmpty) {
                           String? displayName = widget.user.displayName;
+                          widget.nameController.text = displayName ?? '';
+
+                          widget.onNameChanged(widget.nameController.text);
+
                           return Text(
-                            '$displayName',
+                            displayName ?? '',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[800],
@@ -93,6 +103,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                             ),
                           );
                         }
+
                         if (userDoc == null) {
                           return Text(
                             'User not found',
@@ -104,8 +115,13 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                           );
                         }
 
-                        var nama = userDoc['fullName'] ?? 'Unknown';
-                        widget.nameController.text = nama;
+                        var name = userDoc['fullName'] ?? 'Unknown';
+                        if (currentName != name) {
+                          currentName = name;
+                          widget.nameController.text = name;
+                          widget.onNameChanged(name);
+                        }
+
                         return TextField(
                           readOnly: true,
                           controller: widget.nameController,
@@ -169,7 +185,10 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                             color: Colors.black,
                           ),
                           onEditingComplete: () {
-                            setState(() {});
+                            setState(() {
+                              widget.onPhoneNumberChanged(
+                                  widget.phoneNumberController.text);
+                            });
                           },
                         );
                       },
@@ -201,10 +220,10 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
           setState(() {
             widget.selectedProviderParam = newValue!;
             widget.onProviderSelected(
-                newValue!); // oper ke parent screen ketika berubah
+                newValue); // oper ke parent screen ketika berubah
           });
         },
-        items: <String>['IM3', 'telkomsel', 'XL']
+        items: <String>['IM3', 'Telkomsel', 'XL']
             .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,

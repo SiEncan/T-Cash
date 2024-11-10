@@ -42,7 +42,19 @@ class _PulsaScreenState extends State<PulsaScreen> {
                 selectedProviderParam: selectedProvider,
                 onProviderSelected: (provider) {
                   setState(() {
-                    selectedProvider = provider; // Update selected provider
+                    selectedProvider = provider;
+                  });
+                },
+                onNameChanged: (newName) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      nameController.text = newName;
+                    });
+                  });
+                },
+                onPhoneNumberChanged: (newPhoneNumber) {
+                  setState(() {
+                    phoneNumberController.text = newPhoneNumber;
                   });
                 },
               ),
@@ -50,6 +62,8 @@ class _PulsaScreenState extends State<PulsaScreen> {
               Expanded(
                   child: PulsaGrid(
                 selectedProviderParam: selectedProvider,
+                phoneNumber: phoneNumberController.text,
+                receiverName: nameController.text,
               ))
             ],
           ),
