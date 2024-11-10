@@ -4,7 +4,7 @@ import 'package:fintar/screen/home/screens/widgets/pulsa_card_widget.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/services/saldo_services.dart';
 import 'package:fintar/services/transaction_services.dart';
-import 'package:fintar/screen/auth/verif.dart';
+import 'package:fintar/screen/auth/passcode_input.dart';
 
 // ignore: must_be_immutable
 class PulsaGrid extends StatelessWidget {
