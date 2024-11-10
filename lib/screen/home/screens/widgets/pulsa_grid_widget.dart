@@ -327,6 +327,19 @@ class PulsaGrid extends StatelessWidget {
                                   bool isSaldoSufficient = await _saldoService
                                       .reduceSaldo(userId, hargaFormatted);
 
+                                  if (phoneNumber.trim() == '') {
+                                    Navigator.pop(context);
+
+                                    showCustomDialog(
+                                      context: context,
+                                      imagePath: 'img/failed.png',
+                                      message: 'Please fill out phone number.',
+                                      height: 100,
+                                      buttonColor: Colors.red,
+                                    );
+                                    return;
+                                  }
+
                                   if (isSaldoSufficient) {
                                     await _transactionService.saveTransaction(
                                         userId,

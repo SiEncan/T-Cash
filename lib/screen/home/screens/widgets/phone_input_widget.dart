@@ -88,56 +88,42 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                             ? snapshot.data!.docs.first
                             : null;
 
-                        if (widget.phoneNumberController.text.isEmpty) {
-                          String? displayName = widget.user.displayName;
-                          widget.nameController.text = displayName ?? '';
+                        String displayName;
 
+                        if (widget.phoneNumberController.text.isEmpty &&
+                            widget.nameController.text.isEmpty) {
+                          displayName = widget.user.displayName ?? '';
+                          widget.nameController.text = displayName;
                           widget.onNameChanged(widget.nameController.text);
+                        } else if (userDoc == null) {
+                          displayName = 'Unknown';
+                        } else {
+                          displayName = userDoc['fullName'] ?? 'Unknown';
 
-                          return Text(
-                            displayName ?? '',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[800],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          );
+                          if (currentName != displayName) {
+                            currentName = displayName;
+                            widget.nameController.text = displayName;
+                            widget.onNameChanged(displayName);
+                          }
                         }
 
-                        if (userDoc == null) {
-                          return Text(
-                            'User not found',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[500],
-                              fontWeight: FontWeight.w400,
-                            ),
-                          );
+                        if (displayName == 'Unknown' &&
+                            currentName != displayName) {
+                          currentName = displayName;
+                          widget.nameController.text = displayName;
+                          widget.onNameChanged(displayName);
                         }
 
-                        var name = userDoc['fullName'] ?? 'Unknown';
-                        if (currentName != name) {
-                          currentName = name;
-                          widget.nameController.text = name;
-                          widget.onNameChanged(name);
-                        }
-
-                        return TextField(
-                          readOnly: true,
-                          controller: widget.nameController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                            hintStyle: TextStyle(
-                              color: Colors.grey[800],
-                              fontSize: 16,
-                            ),
-                          ),
+                        return Text(
+                          displayName,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.w500,
+                            color: displayName == 'Unknown'
+                                ? Colors.grey[500]
+                                : Colors.grey[800],
+                            fontWeight: displayName == 'Unknown'
+                                ? FontWeight.w400
+                                : FontWeight.w500,
                           ),
                         );
                       },
