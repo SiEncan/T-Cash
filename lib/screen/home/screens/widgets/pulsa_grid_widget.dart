@@ -323,23 +323,39 @@ class PulsaGrid extends StatelessWidget {
                                   String userId = authService.getUserId();
                                   int hargaFormatted = int.parse(
                                       hargaPulsa[index].replaceAll('.', ''));
-                                  await _saldoService.reduceSaldo(
-                                      userId, hargaFormatted);
 
-                                  await _transactionService.saveTransaction(
-                                      userId,
-                                      hargaFormatted,
-                                      'Payment',
-                                      'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}');
-                                  Navigator.pop(context);
-                                  showCustomDialog(
-                                    context: context,
-                                    imagePath: 'img/success.png',
-                                    message:
-                                        'Purchase successful. Your credits will be applied shortly.',
-                                    height: 100,
-                                    buttonColor: Colors.green,
-                                  );
+                                  bool isSaldoSufficient = await _saldoService
+                                      .reduceSaldo(userId, hargaFormatted);
+
+                                  if (isSaldoSufficient) {
+                                    await _transactionService.saveTransaction(
+                                        userId,
+                                        hargaFormatted,
+                                        'Payment',
+                                        'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}');
+
+                                    Navigator.pop(context);
+
+                                    showCustomDialog(
+                                      context: context,
+                                      imagePath: 'img/success.png',
+                                      message:
+                                          'Purchase successful. Your credits will be applied shortly.',
+                                      height: 100,
+                                      buttonColor: Colors.green,
+                                    );
+                                  } else {
+                                    Navigator.pop(context);
+
+                                    showCustomDialog(
+                                      context: context,
+                                      imagePath: 'img/failed.png',
+                                      message:
+                                          'Insufficient balance. Please top-up your account.',
+                                      height: 100,
+                                      buttonColor: Colors.red,
+                                    );
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(

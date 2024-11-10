@@ -4,7 +4,7 @@ class SaldoService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //  mengurangi saldo
-  Future<void> reduceSaldo(String userId, int amount) async {
+  Future<bool> reduceSaldo(String userId, int amount) async {
     final userDoc = _firestore.collection('users').doc(userId);
 
     try {
@@ -20,19 +20,23 @@ class SaldoService {
           // Update saldo di Firestore
           await userDoc.update({'saldo': newSaldo});
           print('Saldo berhasil diupdate');
+          return true;
         } else {
           print('Saldo ga cukup');
+          return false;
         }
       } else {
         print('Pengguna tidak ditemukan');
+        return false;
       }
     } catch (e) {
       print('Terjadi kesalahan: $e');
+      return false;
     }
   }
 
   // menambah saldo
-  Future<void> addSaldo(String userId, int amount) async {
+  Future<bool> addSaldo(String userId, int amount) async {
     final userDoc = _firestore.collection('users').doc(userId);
 
     try {
@@ -47,11 +51,14 @@ class SaldoService {
         // Update saldo di Firestore
         await userDoc.update({'saldo': newSaldo});
         print('Saldo berhasil diupdate');
+        return true;
       } else {
         print('Pengguna tidak ditemukan');
+        return false;
       }
     } catch (e) {
       print('Terjadi kesalahan: $e');
+      return false;
     }
   }
 }
