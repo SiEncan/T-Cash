@@ -1,8 +1,8 @@
+import 'package:fintar/widgets/modal.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:fintar/services/auth_services.dart';
-import 'package:fintar/widgets/dismissable_dialog.dart';
 
 class PasscodeModal extends StatelessWidget {
   const PasscodeModal({super.key});
@@ -47,32 +47,66 @@ class PasscodeModal extends StatelessWidget {
               bool isPasscodeTrue =
                   await _verifyPasscode(context, int.parse(value));
               if (isPasscodeTrue) {
-                showDismissableDialog(
-                    context: context,
-                    imagePath: 'img/success.png',
-                    message: 'Verification Complete',
-                    height: 70,
-                    buttonColor: Colors.green,
-                    duration: 100,
-                    returnValue: true);
+                // tunggu modal tertutup baru melanjutkan
+                await showModalBottomSheet(
+                  context: context,
+                  isDismissible: false,
+                  enableDrag: false,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (context) {
+                    return AutoCloseBottomSheet(
+                      title: "You're All Set!",
+                      icon: const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                      message: 'You can now complete your transaction.',
+                      buttonText: 'OK',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
 
-                // Tunggu beberapa saat sebelum menutup modal Passcode
-                await Future.delayed(const Duration(seconds: 2));
-
-                Navigator.pop(context); // Lanjutkan transaksi
+                Navigator.pop(context, true);
               } else {
-                // Tampilkan dialog kesalahan
-                showDismissableDialog(
-                    context: context,
-                    imagePath: 'img/failed.png',
-                    message: 'Wrong Passcode',
-                    height: 70,
-                    buttonColor: Colors.green,
-                    duration: 100,
-                    returnValue: false);
+                // Show error dialog
+                await showModalBottomSheet(
+                  context: context,
+                  isDismissible: false,
+                  enableDrag: false,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (context) {
+                    return AutoCloseBottomSheet(
+                      title: "Incorrect Passcode!",
+                      icon: const Icon(
+                        Icons.check_circle,
+                        color: Colors.red,
+                        size: 60,
+                      ),
+                      message:
+                          'The passcode you entered is incorrect. Please try again.',
+                      buttonText: 'OK',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
 
-                await Future.delayed(const Duration(seconds: 2));
-                Navigator.pop(context); // Batalkan transaksi
+                Navigator.pop(context, false);
               }
             },
           )
@@ -92,14 +126,8 @@ class PasscodeModal extends StatelessWidget {
       final docSnapshot = await passcodeRef.get();
       if (docSnapshot.exists) {
         final storedPasscode = docSnapshot.data()?['passcode'];
-        if (storedPasscode == enteredPasscode) {
-          // Passcode benar
-          return true;
-        } else {
-          return false;
-        }
+        return storedPasscode == enteredPasscode;
       } else {
-        // User tidak ditemukan
         return false;
       }
     } catch (e) {
@@ -108,7 +136,6 @@ class PasscodeModal extends StatelessWidget {
     }
   }
 
-  // Fungsi untuk menampilkan modal
   static Future<bool> showPasscodeModal(BuildContext context) async {
     final result = await showModalBottomSheet(
       context: context,
@@ -116,9 +143,9 @@ class PasscodeModal extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return const PasscodeModal(); // Panggil widget modal
+        return const PasscodeModal();
       },
     );
-    return result ?? false; // hasil return passcode sesuai/tidak
+    return result ?? false; // Return passcode verification result
   }
 }

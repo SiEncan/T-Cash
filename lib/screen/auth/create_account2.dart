@@ -1,8 +1,9 @@
-import 'package:fintar/screen/auth/login.dart';
+import 'package:fintar/screen/auth/passcode.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class CreateAccountPage2 extends StatefulWidget {
   final String email;
@@ -72,6 +73,9 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
             TextField(
               controller: phoneNumberController,
               keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
               decoration: InputDecoration(
                 labelText: 'Phone Number',
                 hintText: 'Enter your phone number',
@@ -170,11 +174,18 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                   });
 
                   // Navigasi ke halaman utama setelah berhasil
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const LoginScreen(
+                  //               showDialog: true,
+                  //             )));
+
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginScreen(
-                                showDialog: true,
+                          builder: (context) => CreatePasscodePage(
+                                userid: userId,
                               )));
                 } on FirebaseAuthException catch (e) {
                   String errorMessage;

@@ -300,95 +300,9 @@ class PulsaGrid extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Row(
                           children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  side: BorderSide(color: Colors.grey[400]!),
-                                ),
-                                child: const Text(
-                                  "Cancel",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ),
+                            cancelButton(context),
                             const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  String userId = authService.getUserId();
-                                  int hargaFormatted = int.parse(
-                                      hargaPulsa[index].replaceAll('.', ''));
-
-                                  if (phoneNumber.trim() == '') {
-                                    Navigator.pop(context);
-
-                                    return showCustomDialog(
-                                      context: context,
-                                      imagePath: 'img/failed.png',
-                                      message: 'Please fill out phone number.',
-                                      height: 100,
-                                      buttonColor: Colors.red,
-                                    );
-                                  }
-
-                                  bool isPasscodeTrue =
-                                      await PasscodeModal.showPasscodeModal(
-                                          context);
-                                  if (!isPasscodeTrue) {
-                                    return;
-                                  }
-
-                                  bool isSaldoSufficient = await _saldoService
-                                      .reduceSaldo(userId, hargaFormatted);
-
-                                  if (isSaldoSufficient) {
-                                    await _transactionService.saveTransaction(
-                                        userId,
-                                        hargaFormatted,
-                                        'Payment',
-                                        'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}');
-
-                                    Navigator.pop(context);
-
-                                    showCustomDialog(
-                                      context: context,
-                                      imagePath: 'img/success.png',
-                                      message:
-                                          'Payment confirmed! Your purchase is being processed.',
-                                      height: 100,
-                                      buttonColor: Colors.green,
-                                    );
-                                  } else {
-                                    Navigator.pop(context);
-
-                                    showCustomDialog(
-                                      context: context,
-                                      imagePath: 'img/failed.png',
-                                      message:
-                                          'Insufficient balance. Please top-up your account.',
-                                      height: 100,
-                                      buttonColor: Colors.red,
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  backgroundColor: Colors.blueAccent,
-                                ),
-                                child: const Text(
-                                  "Confirm Payment",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
+                            confirmButton(index, context),
                           ],
                         ),
                       ),
@@ -400,6 +314,95 @@ class PulsaGrid extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Expanded confirmButton(int index, BuildContext context) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () async {
+          String userId = authService.getUserId();
+          int hargaFormatted = int.parse(hargaPulsa[index].replaceAll('.', ''));
+
+          if (phoneNumber.trim() == '') {
+            Navigator.pop(context);
+
+            return showCustomDialog(
+              context: context,
+              imagePath: 'img/failed.png',
+              message: 'Please fill out phone number.',
+              height: 100,
+              buttonColor: Colors.red,
+            );
+          }
+
+          bool isPasscodeTrue = await PasscodeModal.showPasscodeModal(context);
+          if (!isPasscodeTrue) {
+            return;
+          }
+
+          bool isSaldoSufficient =
+              await _saldoService.reduceSaldo(userId, hargaFormatted);
+
+          if (isSaldoSufficient) {
+            await _transactionService.saveTransaction(
+                userId,
+                hargaFormatted,
+                'Payment',
+                'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}');
+
+            Navigator.pop(context);
+
+            showCustomDialog(
+              context: context,
+              imagePath: 'img/success.png',
+              message: 'Payment confirmed! Your purchase is being processed.',
+              height: 100,
+              buttonColor: Colors.green,
+            );
+          } else {
+            Navigator.pop(context);
+
+            showCustomDialog(
+              context: context,
+              imagePath: 'img/failed.png',
+              message: 'Insufficient balance. Please top-up your account.',
+              height: 100,
+              buttonColor: Colors.red,
+            );
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          backgroundColor: Colors.blueAccent,
+        ),
+        child: const Text(
+          "Confirm Payment",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Expanded cancelButton(BuildContext context) {
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          side: BorderSide(color: Colors.grey[400]!),
+        ),
+        child: const Text(
+          "Cancel",
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
     );
   }
 }
