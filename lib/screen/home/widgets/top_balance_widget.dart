@@ -1,11 +1,10 @@
+import 'package:fintar/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 class BalanceDisplayWidget extends StatefulWidget {
   const BalanceDisplayWidget({super.key});
-
   @override
   // ignore: library_private_types_in_public_api
   _BalanceDisplayWidgetState createState() => _BalanceDisplayWidgetState();
@@ -18,12 +17,7 @@ class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      // Jika user tidak ditemukan, tampilkan pesan atau redirect
-      return const Text("User not logged in.");
-    }
+    String userId = AuthService().getUserId();
 
     return Container(
       padding: const EdgeInsets.only(top: 42), // Padding ke atas layar hp
@@ -59,8 +53,7 @@ class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
               StreamBuilder<DocumentSnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('users')
-                    .doc(user
-                        .uid) // Menggunakan user UID untuk mendapatkan dokumen
+                    .doc(userId) // Menggunakan UID untuk mendapatkan dokumen
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {

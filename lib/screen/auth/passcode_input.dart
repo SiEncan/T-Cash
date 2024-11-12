@@ -1,11 +1,11 @@
+import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/modal.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:fintar/services/auth_services.dart';
 
 class PasscodeModal extends StatelessWidget {
-  const PasscodeModal({super.key});
+  PasscodeModal({super.key});
+  final passcodeChecker = PasscodeChecker();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +29,8 @@ class PasscodeModal extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           PinCodeTextField(
+            autoFocus: true,
+            showCursor: false,
             appContext: context,
             length: 6,
             obscureText: true,
@@ -45,7 +47,7 @@ class PasscodeModal extends StatelessWidget {
             animationDuration: const Duration(milliseconds: 300),
             onCompleted: (value) async {
               bool isPasscodeTrue =
-                  await _verifyPasscode(context, int.parse(value));
+                  await passcodeChecker.verifyPasscode(context, value);
               if (isPasscodeTrue) {
                 // tunggu modal tertutup baru melanjutkan
                 await showModalBottomSheet(
@@ -92,7 +94,7 @@ class PasscodeModal extends StatelessWidget {
                     return AutoCloseBottomSheet(
                       title: "Incorrect Passcode!",
                       icon: const Icon(
-                        Icons.check_circle,
+                        Icons.close_outlined,
                         color: Colors.red,
                         size: 60,
                       ),
@@ -115,27 +117,6 @@ class PasscodeModal extends StatelessWidget {
     );
   }
 
-  Future<bool> _verifyPasscode(
-      BuildContext context, int enteredPasscode) async {
-    final authService = AuthService();
-    final userId = authService.getUserId();
-    final passcodeRef =
-        FirebaseFirestore.instance.collection('users').doc(userId);
-
-    try {
-      final docSnapshot = await passcodeRef.get();
-      if (docSnapshot.exists) {
-        final storedPasscode = docSnapshot.data()?['passcode'];
-        return storedPasscode == enteredPasscode;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print("Terjadi kesalahan saat mengambil passcode: $e");
-      return false;
-    }
-  }
-
   static Future<bool> showPasscodeModal(BuildContext context) async {
     final result = await showModalBottomSheet(
       context: context,
@@ -143,7 +124,7 @@ class PasscodeModal extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return const PasscodeModal();
+        return PasscodeModal();
       },
     );
     return result ?? false; // Return passcode verification result

@@ -1,4 +1,7 @@
+import 'package:fintar/screen/auth/passcode_create.dart';
+import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
+import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/screens/widgets/pulsa_card_widget.dart';
 import 'package:fintar/services/auth_services.dart';
@@ -18,6 +21,7 @@ class PulsaGrid extends StatelessWidget {
       required this.phoneNumber,
       required this.receiverName});
 
+  final passcodeChecker = PasscodeChecker();
   final authService = AuthService();
   final SaldoService _saldoService = SaldoService();
   final TransactionService _transactionService = TransactionService();
@@ -321,6 +325,11 @@ class PulsaGrid extends StatelessWidget {
     return Expanded(
       child: ElevatedButton(
         onPressed: () async {
+          bool isPasscodeExist = await passcodeChecker.checkIfPasscodeExists();
+          if (!isPasscodeExist) {
+            Navigator.of(context).push(createRoute(CreatePasscode(), 0, 1));
+            return;
+          }
           String userId = authService.getUserId();
           int hargaFormatted = int.parse(hargaPulsa[index].replaceAll('.', ''));
 

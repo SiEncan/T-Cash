@@ -1,10 +1,12 @@
 import 'package:fintar/screen/auth/logout_screen.dart';
-import 'package:fintar/services/update_display_name.dart';
+import 'package:fintar/screen/auth/passcode_create.dart';
+import 'package:fintar/services/passcode_checker.dart';
+import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/home_tab.dart';
 
 class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({super.key});
+  BottomNavigation({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -36,7 +38,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    updateDisplayNameFromFirestore();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final passcodeChecker = PasscodeChecker();
+      bool isPasscodeExist = await passcodeChecker.checkIfPasscodeExists();
+      if (!isPasscodeExist) {
+        Navigator.of(context).push(createRoute(CreatePasscode(), 0, 1));
+      }
+    });
   }
 
   @override
