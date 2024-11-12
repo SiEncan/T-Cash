@@ -108,40 +108,43 @@ class CreatePasscodeState extends State<CreatePasscode> {
               const SizedBox(height: 30),
               Center(
                 child: SimpleNumpad(
-                  buttonWidth: 90,
-                  buttonHeight: 90,
-                  gridSpacing: 10,
-                  buttonBorderRadius: 50,
-                  buttonBorderSide: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 2.5,
-                  ),
-                  foregroundColor: Colors.black,
-                  backgroundColor: const Color.fromARGB(45, 255, 255, 255),
-                  textStyle: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  useBackspace: true,
-                  optionText: 'Clear',
-                  onPressed: (str) {
-                    switch (str) {
-                      case 'BACKSPACE':
-                        if (_pinController.text.isNotEmpty) {
-                          _pinController.text = _pinController.text
-                              .substring(0, _pinController.text.length - 1);
+                    buttonWidth: 90,
+                    buttonHeight: 90,
+                    gridSpacing: 10,
+                    buttonBorderRadius: 50,
+                    buttonBorderSide: BorderSide(
+                      color: Colors.grey.shade300,
+                      width: 2.5,
+                    ),
+                    foregroundColor: Colors.black,
+                    backgroundColor: const Color.fromARGB(45, 255, 255, 255),
+                    textStyle: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    useBackspace: true,
+                    optionText: 'Clear',
+                    onPressed: (str) {
+                      if (_pinController.text.length < _pinLength ||
+                          str == 'BACKSPACE' ||
+                          str == 'Clear') {
+                        switch (str) {
+                          case 'BACKSPACE':
+                            if (_pinController.text.isNotEmpty) {
+                              _pinController.text = _pinController.text
+                                  .substring(0, _pinController.text.length - 1);
+                            }
+                            break;
+                          case 'Clear':
+                            _pinController.text = '';
+                            break;
+                          default:
+                            _pinController.text += str;
+                            break;
                         }
-                        break;
-                      case 'Clear':
-                        _pinController.text = '';
-                        break;
-                      default:
-                        _pinController.text += str;
-                        break;
-                    }
-                  },
-                ),
+                      }
+                    }),
               ),
               const Spacer(),
               Center(
