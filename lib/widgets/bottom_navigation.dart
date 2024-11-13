@@ -1,9 +1,11 @@
 import 'package:fintar/screen/auth/logout_screen.dart';
 import 'package:fintar/screen/auth/passcode_create.dart';
+import 'package:fintar/screen/profile/profile.dart';
 import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/home_tab.dart';
+import 'package:fintar/screen/profile/profile.dart';
 
 class BottomNavigation extends StatefulWidget {
   BottomNavigation({super.key});
@@ -22,8 +24,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
     const Center(
         child:
             Text('SIZE BOX', style: TextStyle(fontSize: 24))), // INACCESSIBLE
-    const Center(child: Text('Transaction', style: TextStyle(fontSize: 24))),
     const logoutScreen(),
+    const Profile(),
   ];
 
   void _onItemTapped(int index) {
