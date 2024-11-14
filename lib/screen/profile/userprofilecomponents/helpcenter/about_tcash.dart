@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/terms_conditions.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/aboutmenu/benefit.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/accsecure/about_tcashmenu.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/aboutmenu/about_tcashmenu.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/aboutmenu/whatis_tcash.dart';
 
 class AboutTCash extends StatelessWidget {
@@ -53,15 +53,31 @@ class AboutTCash extends StatelessWidget {
   }
 
   Widget _buildAboutItem(String title, String subtitle, VoidCallback onTap) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Text(title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[200]!, width: 1),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            if (subtitle.isNotEmpty)
+              Text(
+                subtitle,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
       ),
     );
   }

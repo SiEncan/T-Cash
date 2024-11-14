@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Benefit extends StatelessWidget {
-  const Benefit({super.key});
+class AboutTcashMenu extends StatelessWidget {
+  const AboutTcashMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class Benefit extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Benefits of T-Cash',
+          'About T-Cash',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -27,7 +27,7 @@ class Benefit extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Benefits of T-Cash',
+                    'About T-Cash',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class Benefit extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Discover the advantages of using T-Cash for your transactions.',
+                    'Learn more about T-Cash, its benefits, and how it works.',
                     style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                     textAlign: TextAlign.center,
                   ),
@@ -45,24 +45,24 @@ class Benefit extends StatelessWidget {
             ),
             SizedBox(height: 20),
             _buildSection(
-              'Quick and Easy Transactions',
-              'With T-Cash, you can complete transactions in seconds. No more waiting in line or dealing with physical cash. Pay for your purchases or transfer money instantly from your mobile device.',
+              'What is T-Cash?',
+              'T-Cash is a secure, digital wallet solution that allows users to make quick and easy transactions. With T-Cash, you can pay for goods and services, transfer money to friends and family, and even manage your finances, all from one convenient platform.',
             ),
             _buildSection(
-              'Enhanced Security',
-              'T-Cash ensures your transactions are secure with advanced encryption technology. Enjoy peace of mind knowing your financial information is protected every step of the way.',
+              'Benefits of Using T-Cash',
+              'T-Cash offers a variety of benefits, including fast transactions, high security, easy account management, and a user-friendly interface. By using T-Cash, you can also enjoy exclusive discounts, cashback offers, and a seamless payment experience.',
             ),
             _buildSection(
-              'Exclusive Discounts and Offers',
-              'As a T-Cash user, you get access to exclusive discounts and cashback offers on selected merchants and services, helping you save money on your everyday transactions.',
+              'How T-Cash Works',
+              'To start using T-Cash, download the app, create an account, and link your bank or card. Once set up, you can load funds into your T-Cash account and start making secure payments and transfers immediately.',
             ),
             _buildSection(
-              'Easy Expense Tracking',
-              'Keep track of your spending easily with T-Cash. The app provides a detailed history of all transactions, so you can manage your finances and budget more effectively.',
+              'Security Features',
+              'T-Cash prioritizes the security of your transactions with multiple layers of protection, including biometric login, two-factor authentication, and encryption for data transfer. This ensures that all your financial data remains private and secure.',
             ),
             _buildSection(
-              'Seamless Integration',
-              'Link your T-Cash account to other financial services or apps for a seamless experience. Manage all your payments and transfers from one place without any hassle.',
+              'Customer Support',
+              'T-Cash provides dedicated customer support to assist you with any issues. You can reach out to our support team through the app, by phone, or email for any inquiries or technical assistance.',
             ),
             SizedBox(height: 30),
           ],

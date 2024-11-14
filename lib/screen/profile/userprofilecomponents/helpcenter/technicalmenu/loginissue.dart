@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Benefit extends StatelessWidget {
-  const Benefit({super.key});
+class LoginIssuesPage extends StatelessWidget {
+  const LoginIssuesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class Benefit extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Benefits of T-Cash',
+          'Login Issues',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -27,7 +27,7 @@ class Benefit extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Benefits of T-Cash',
+                    'Troubleshooting Login Issues',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -35,34 +35,36 @@ class Benefit extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    'Discover the advantages of using T-Cash for your transactions.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
             _buildSection(
-              'Quick and Easy Transactions',
-              'With T-Cash, you can complete transactions in seconds. No more waiting in line or dealing with physical cash. Pay for your purchases or transfer money instantly from your mobile device.',
+              '1. Forgot Password?',
+              'If you cannot remember your password, use the "Forgot Password" option on the login screen. Enter your registered email address, and you will receive instructions on how to reset your password.',
             ),
             _buildSection(
-              'Enhanced Security',
-              'T-Cash ensures your transactions are secure with advanced encryption technology. Enjoy peace of mind knowing your financial information is protected every step of the way.',
+              '2. Check Your Internet Connection',
+              'A poor or unstable internet connection can prevent you from logging in. Ensure that you have a stable connection before attempting to log in again.',
             ),
             _buildSection(
-              'Exclusive Discounts and Offers',
-              'As a T-Cash user, you get access to exclusive discounts and cashback offers on selected merchants and services, helping you save money on your everyday transactions.',
+              '3. Verify Your Credentials',
+              'Make sure that the email address and password you are entering are correct. Double-check for any typos, and ensure that Caps Lock is not enabled.',
             ),
             _buildSection(
-              'Easy Expense Tracking',
-              'Keep track of your spending easily with T-Cash. The app provides a detailed history of all transactions, so you can manage your finances and budget more effectively.',
+              '4. Clear Cache and App Data',
+              'Sometimes app issues are caused by corrupted cache or stored data. Try clearing the app cache or reinstalling the app to see if it resolves the login problem.',
             ),
             _buildSection(
-              'Seamless Integration',
-              'Link your T-Cash account to other financial services or apps for a seamless experience. Manage all your payments and transfers from one place without any hassle.',
+              '5. Account Locked or Suspended?',
+              'If you have made multiple unsuccessful login attempts, your account may have been temporarily locked for security reasons. Contact customer support for assistance.',
+            ),
+            _buildSection(
+              '6. Two-Factor Authentication Problems',
+              'If you have enabled two-factor authentication and are having trouble receiving the code, check your phone number, email address, or authentication app settings. Make sure your device has proper network connectivity.',
+            ),
+            _buildSection(
+              ' 7. Server Outage',
+              'Occasionally, the service might experience server issues. Check the status page of the service to confirm if there is a known issue, or try again later.',
             ),
             SizedBox(height: 30),
           ],
@@ -92,12 +94,12 @@ class Benefit extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 5),
           Text(
             description,
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
         ],
       ),

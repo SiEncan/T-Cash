@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -8,6 +10,57 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  String profileImageUrl = ''; // URL gambar profil dari database
+  String realName = 'SEBASTIAN WIJAYANTO';
+  String username = 'sebastian';
+  String mobileNumber = '62 *** 6367';
+  String email = 'a **** @gmail.com';
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        profileImageUrl = image.path; // Atur ulang URL gambar setelah unggah
+      });
+
+      // TODO: Implementasikan logika penyimpanan ke database atau server
+    }
+  }
+
+  void _editProfileField(
+      String title, String initialValue, Function(String) onSave) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController controller =
+            TextEditingController(text: initialValue);
+        return AlertDialog(
+          title: Text('Edit $title'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(hintText: 'Enter new $title'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onSave(controller.text);
+                Navigator.pop(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,46 +82,75 @@ class _UserProfileState extends State<UserProfile> {
             _buildSection([
               _buildSettingItem(
                 'Account Type',
-                'DANA Premium',
-                showArrow: true,
+                'T-CASH Premium',
+                showArrow: false,
                 isBlue: true,
               ),
               _buildSettingItem(
                 'Profile Picture',
                 '',
                 showArrow: true,
-                leading: const CircleAvatar(
+                leading: CircleAvatar(
                   radius: 15,
                   backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, size: 20, color: Colors.white),
+                  backgroundImage: profileImageUrl.isNotEmpty
+                      ? FileImage(File(profileImageUrl))
+                      : null,
+                  child: profileImageUrl.isEmpty
+                      ? const Icon(Icons.person, size: 20, color: Colors.white)
+                      : null,
                 ),
+                onTap: _pickImage,
               ),
               _buildSettingItem(
-                'Real Name',
-                'SEBASTIAN WIJAYANTO',
-                showArrow: false,
+                'Realname',
+                realName,
+                showArrow: true,
+                isBlue: true,
+                onTap: () =>
+                    _editProfileField('Realname', realName, (newValue) {
+                  setState(() {
+                    realName = newValue;
+                  });
+                  // TODO: Save username to database
+                }),
               ),
               _buildSettingItem(
                 'Username',
-                'sebastian',
+                username,
                 showArrow: true,
                 isBlue: true,
+                onTap: () =>
+                    _editProfileField('Username', username, (newValue) {
+                  setState(() {
+                    username = newValue;
+                  });
+                  // TODO: Save username to database
+                }),
               ),
               _buildSettingItem(
                 'Mobile Number',
-                '62 *** 6367',
+                mobileNumber,
                 showArrow: true,
+                onTap: () => _editProfileField('Mobile Number', mobileNumber,
+                    (newValue) {
+                  setState(() {
+                    mobileNumber = newValue;
+                  });
+                  // TODO: Save mobile number to database
+                }),
               ),
               _buildSettingItem(
                 'Email Address',
-                'a **** @gmail.com',
+                email,
                 showArrow: true,
-              ),
-              _buildSettingItem(
-                'BI-FAST Account',
-                'Manage',
-                showArrow: true,
-                isBlue: true,
+                onTap: () =>
+                    _editProfileField('Email Address', email, (newValue) {
+                  setState(() {
+                    email = newValue;
+                  });
+                  // TODO: Save email address to database
+                }),
               ),
             ]),
           ],
@@ -89,7 +171,10 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildSettingItem(String title, String value,
-      {bool showArrow = true, Widget? leading, bool isBlue = false}) {
+      {bool showArrow = true,
+      Widget? leading,
+      bool isBlue = false,
+      VoidCallback? onTap}) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -118,48 +203,13 @@ class _UserProfileState extends State<UserProfile> {
               ),
             ),
             if (showArrow)
-              Icon(
+              const Icon(
                 Icons.chevron_right,
-                color: Colors.grey[400],
+                color: Colors.grey,
               ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchItem(
-      String title, String subtitle, bool value, Function(bool) onChanged) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              Switch(
-                value: value,
-                onChanged: onChanged,
-                activeColor: Colors.blue,
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
+        onTap: onTap,
       ),
     );
   }

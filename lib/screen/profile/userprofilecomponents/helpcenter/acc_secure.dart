@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/accsecure/account_secure.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/accsecure/payment_secure.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/accsecure/technical_issue.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/accsecure/about_tcashmenu.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/user_profile.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/helpcenter/accsecure/changepw.dart';
 
 class AccountSecure extends StatelessWidget {
   const AccountSecure({super.key});
@@ -30,25 +28,30 @@ class AccountSecure extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _buildSecurityOption('Account & Security', '', () {
-              Navigator.push(
+            _buildSecurityOption(
+              'Update Profile Information',
+              'Modify your personal details',
+              () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          AccountSecureMenu())); // Ganti ke halaman lain jika ada
-            }),
-            _buildSecurityOption('Payments & Transactions', '', () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PaymentSecure()));
-            }),
-            _buildSecurityOption('Technical Issues', '', () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => TechnicalIssue()));
-            }),
-            _buildSecurityOption('About T-Cash', '', () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AboutTcashMenu()));
-            }),
+                    builder: (context) => UserProfile(),
+                  ),
+                );
+              },
+            ),
+            _buildSecurityOption(
+              'Change Password',
+              'Ensure your account stays secure',
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangePasswordPage(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -57,15 +60,36 @@ class AccountSecure extends StatelessWidget {
 
   Widget _buildSecurityOption(
       String title, String subtitle, VoidCallback onTap) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Text(title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[200]!, width: 1),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                if (subtitle.isNotEmpty)
+                  Text(
+                    subtitle,
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+              ],
+            ),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
       ),
     );
   }

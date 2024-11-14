@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Benefit extends StatelessWidget {
-  const Benefit({super.key});
+class AppCrashIssuesPage extends StatelessWidget {
+  const AppCrashIssuesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class Benefit extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Benefits of T-Cash',
+          'App Crash Issues',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -27,7 +27,7 @@ class Benefit extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Benefits of T-Cash',
+                    'Troubleshooting App Crashes',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -35,34 +35,32 @@ class Benefit extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    'Discover the advantages of using T-Cash for your transactions.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
             _buildSection(
-              'Quick and Easy Transactions',
-              'With T-Cash, you can complete transactions in seconds. No more waiting in line or dealing with physical cash. Pay for your purchases or transfer money instantly from your mobile device.',
+              'Update the App',
+              'Ensure that you are using the latest version of the app. Older versions might have bugs that could cause crashes. Check for updates in the app store and install the latest version.',
             ),
             _buildSection(
-              'Enhanced Security',
-              'T-Cash ensures your transactions are secure with advanced encryption technology. Enjoy peace of mind knowing your financial information is protected every step of the way.',
+              'Clear App Cache',
+              'Temporary files and data might cause the app to crash. Go to your device settings, find the app, and clear the cache to free up space and improve performance.',
             ),
             _buildSection(
-              'Exclusive Discounts and Offers',
-              'As a T-Cash user, you get access to exclusive discounts and cashback offers on selected merchants and services, helping you save money on your everyday transactions.',
+              'Free Up Device Storage',
+              'Low device storage can affect app performance and cause crashes. Check your device storage and clear unnecessary files to create more space.',
             ),
             _buildSection(
-              'Easy Expense Tracking',
-              'Keep track of your spending easily with T-Cash. The app provides a detailed history of all transactions, so you can manage your finances and budget more effectively.',
+              'Restart Your Device',
+              'Sometimes a simple device restart can resolve app crashes. Restart your phone or tablet, then try opening the app again.',
             ),
             _buildSection(
-              'Seamless Integration',
-              'Link your T-Cash account to other financial services or apps for a seamless experience. Manage all your payments and transfers from one place without any hassle.',
+              'Check for OS Compatibility',
+              'Ensure that your device operating system is compatible with the app. If your OS is outdated, consider updating it to improve app compatibility.',
+            ),
+            _buildSection(
+              'Reinstall the App',
+              'If issues persist, uninstall the app and reinstall it. This can remove corrupted data and files that might be causing crashes.',
             ),
             SizedBox(height: 30),
           ],
@@ -92,12 +90,12 @@ class Benefit extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 5),
           Text(
             description,
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
         ],
       ),
