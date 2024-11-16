@@ -102,7 +102,7 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                   vertical: size.height * 0.02,
                   horizontal: size.width * 0.1,
                 ),
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
               ),
               onPressed: () async {
                 // Validasi input

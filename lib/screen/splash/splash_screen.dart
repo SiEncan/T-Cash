@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // Jika pengguna sudah login, arahkan ke BottomNavigation
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomNavigation()),
+        MaterialPageRoute(builder: (context) => const BottomNavigation()),
       );
     } else {
       // Jika pengguna belum login, arahkan ke WelcomeScreen

@@ -123,7 +123,7 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BottomNavigation()),
+                            builder: (context) => const BottomNavigation()),
                       );
                     }
                   }),
@@ -227,7 +227,7 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BottomNavigation()),
+                            builder: (context) => const BottomNavigation()),
                       );
                     }
                   },

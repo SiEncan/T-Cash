@@ -24,10 +24,10 @@ class PhoneNumberInput extends StatefulWidget {
   });
 
   @override
-  _PhoneNumberInputState createState() => _PhoneNumberInputState();
+  PhoneNumberInputState createState() => PhoneNumberInputState();
 }
 
-class _PhoneNumberInputState extends State<PhoneNumberInput> {
+class PhoneNumberInputState extends State<PhoneNumberInput> {
   String currentPhoneNumber = '';
   String currentName = '';
   @override

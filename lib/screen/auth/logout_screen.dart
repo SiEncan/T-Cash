@@ -2,8 +2,8 @@ import 'package:fintar/screen/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class logoutScreen extends StatelessWidget {
-  const logoutScreen({super.key});
+class LogoutScreen extends StatelessWidget {
+  const LogoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

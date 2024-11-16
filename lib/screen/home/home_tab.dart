@@ -53,7 +53,7 @@ class HomeTab extends StatelessWidget {
                           ],
                         ),
                         // Preview Activity Feeds
-                        child: const RecentFeeds(),
+                        child: RecentFeeds(),
                       ),
                       // Carousel Slider
                       const Padding(

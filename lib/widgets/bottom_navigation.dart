@@ -23,7 +23,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     const Center(
         child:
             Text('SIZE BOX', style: TextStyle(fontSize: 24))), // INACCESSIBLE
-    const logoutScreen(),
+    const LogoutScreen(),
     const Profile(),
   ];
 

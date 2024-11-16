@@ -18,10 +18,10 @@ class AutoCloseBottomSheet extends StatefulWidget {
   });
 
   @override
-  _AutoCloseBottomSheetState createState() => _AutoCloseBottomSheetState();
+  AutoCloseBottomSheetState createState() => AutoCloseBottomSheetState();
 }
 
-class _AutoCloseBottomSheetState extends State<AutoCloseBottomSheet> {
+class AutoCloseBottomSheetState extends State<AutoCloseBottomSheet> {
   int countdown = 4;
   Timer? timer;
 
@@ -32,7 +32,7 @@ class _AutoCloseBottomSheetState extends State<AutoCloseBottomSheet> {
   }
 
   void startCountdown() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown == 1) {
         timer.cancel();
         Navigator.pop(context); // auto close modal when timer ends

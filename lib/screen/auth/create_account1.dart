@@ -6,10 +6,10 @@ class CreateAccountPage1 extends StatefulWidget {
   const CreateAccountPage1({super.key});
 
   @override
-  _CreateAccountPage1State createState() => _CreateAccountPage1State();
+  CreateAccountPage1State createState() => CreateAccountPage1State();
 }
 
-class _CreateAccountPage1State extends State<CreateAccountPage1> {
+class CreateAccountPage1State extends State<CreateAccountPage1> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
