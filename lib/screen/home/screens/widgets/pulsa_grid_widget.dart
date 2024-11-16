@@ -46,7 +46,6 @@ class PulsaGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
     //  harga pulsa berdasarkan selected provider
     if (selectedProviderParam == 'IM3') {
       hargaPulsa = [
@@ -113,154 +112,172 @@ class PulsaGrid extends StatelessWidget {
             hargaPulsa: 'Rp${hargaPulsa[index]}',
           ),
           onTap: () {
-            showModal(context, index, screenHeight);
+            showModal(context, index);
           },
         );
       },
     );
   }
 
-  Future<dynamic> showModal(
-      BuildContext context, int index, double screenHeight) {
+  Future<dynamic> showModal(BuildContext context, int index) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.7, // 70% tinggi layar
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          heightFactor: 0.7,
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 105),
+                  child: ListView(
                     children: [
-                      Center(
-                        child: Container(
-                          width: 50,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "Transaction Details",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const Divider(height: 30, color: Colors.grey),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Receiver Name',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        receiverName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Phone Number',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        phoneNumber,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 57, 57, 57),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Divider(height: 30, color: Colors.grey),
-                      Text(
-                        'Purchase Detail',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      Image.asset(
-                        'img/$selectedProviderParam.png',
-                        width: 120,
-                        height: 60,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Pulsa: ${jumlahPulsa[index].replaceAll('k', '.000')}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(height: 30, color: Colors.grey),
-                      Text(
-                        'Payment Detail',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text(
-                            'Price:',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[800],
-                              fontWeight: FontWeight.w500,
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Transaction Details",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '  Rp${hargaPulsa[index]}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
+                            const Divider(height: 30, color: Colors.grey),
+                            // Receiver Name
+                            Text(
+                              'Receiver Name',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              receiverName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            // Phone Number
+                            Text(
+                              'Phone Number',
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.grey[600]),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              phoneNumber,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 57, 57, 57),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Divider(height: 30, color: Colors.grey),
+                            // Purchase Detail
+                            Text(
+                              'Purchase Detail',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            Image.asset(
+                              'img/$selectedProviderParam.png',
+                              width: 120,
+                              height: 60,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Pulsa: ${jumlahPulsa[index].replaceAll('k', '.000')}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(height: 30, color: Colors.grey),
+                            // Payment Detail
+                            Text(
+                              'Payment Detail',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Text(
+                                  'Price:',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[800],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  '  Rp${hargaPulsa[index]}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 8),
                     ],
                   ),
                 ),
-                const Spacer(),
-                Container(
-                  height: (screenHeight * 0.7) * 0.2,
+              ),
+              Positioned(
+                top: 15,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
                   padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: const [
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                    boxShadow: [
                       BoxShadow(
                         color: Color.fromARGB(78, 50, 50, 50),
                         blurRadius: 8,
@@ -299,22 +316,19 @@ class PulsaGrid extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Spacer(),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Row(
-                          children: [
-                            cancelButton(context),
-                            const SizedBox(width: 12),
-                            confirmButton(index, context),
-                          ],
-                        ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          cancelButton(context),
+                          const SizedBox(width: 12),
+                          confirmButton(index, context),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },

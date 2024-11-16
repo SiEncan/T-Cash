@@ -2,10 +2,13 @@ import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/modal.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:simple_numpad/simple_numpad.dart';
 
 class PasscodeModal extends StatelessWidget {
   PasscodeModal({super.key});
   final passcodeChecker = PasscodeChecker();
+  final TextEditingController _pinController = TextEditingController();
+  final int _pinLength = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +26,14 @@ class PasscodeModal extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            "Enter your 6-digit passcode.",
+            "Please enter your 6-digit passcode to continue.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           const SizedBox(height: 20),
           PinCodeTextField(
+            controller: _pinController,
+            keyboardType: TextInputType.none,
             autoFocus: true,
             showCursor: false,
             appContext: context,
@@ -111,7 +116,50 @@ class PasscodeModal extends StatelessWidget {
                 Navigator.pop(context, false);
               }
             },
-          )
+          ),
+          const SizedBox(height: 20),
+          Container(
+            margin: const EdgeInsets.only(bottom: 30),
+            child: SimpleNumpad(
+              buttonWidth: 80,
+              buttonHeight: 80,
+              gridSpacing: 10,
+              buttonBorderRadius: 50,
+              buttonBorderSide: BorderSide(
+                color: Colors.grey.shade300,
+                width: 2.5,
+              ),
+              foregroundColor: Colors.black,
+              backgroundColor: const Color.fromARGB(45, 255, 255, 255),
+              textStyle: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
+              useBackspace: true,
+              optionText: 'Clear',
+              onPressed: (str) {
+                if (_pinController.text.length < _pinLength ||
+                    str == 'BACKSPACE' ||
+                    str == 'Clear') {
+                  switch (str) {
+                    case 'BACKSPACE':
+                      if (_pinController.text.isNotEmpty) {
+                        _pinController.text = _pinController.text
+                            .substring(0, _pinController.text.length - 1);
+                      }
+                      break;
+                    case 'Clear':
+                      _pinController.text = '';
+                      break;
+                    default:
+                      _pinController.text += str;
+                      break;
+                  }
+                }
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -123,6 +171,7 @@ class PasscodeModal extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      isScrollControlled: true, // agar modal bisa menyesuaikan besar isinya
       builder: (BuildContext context) {
         return PasscodeModal();
       },

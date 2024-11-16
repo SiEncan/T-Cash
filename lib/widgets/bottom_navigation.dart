@@ -5,7 +5,6 @@ import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/home_tab.dart';
-import 'package:fintar/screen/profile/profile.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
