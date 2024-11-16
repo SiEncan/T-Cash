@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/home_tab.dart';
 
 class BottomNavigation extends StatefulWidget {
-  BottomNavigation({super.key});
+  const BottomNavigation({super.key});
 
   @override
   // ignore: library_private_types_in_public_api

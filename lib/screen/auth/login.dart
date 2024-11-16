@@ -309,7 +309,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => BottomNavigation()),
+        MaterialPageRoute(builder: (context) => const BottomNavigation()),
         (Route<dynamic> route) => false, // Menghapus seluruh stack navigasi
       );
     } on FirebaseAuthException catch (e) {

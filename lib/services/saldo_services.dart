@@ -19,18 +19,14 @@ class SaldoService {
 
           // Update saldo di Firestore
           await userDoc.update({'saldo': newSaldo});
-          print('Saldo berhasil diupdate');
           return true;
         } else {
-          print('Saldo ga cukup');
           return false;
         }
       } else {
-        print('Pengguna tidak ditemukan');
         return false;
       }
     } catch (e) {
-      print('Terjadi kesalahan: $e');
       return false;
     }
   }
@@ -50,14 +46,11 @@ class SaldoService {
 
         // Update saldo di Firestore
         await userDoc.update({'saldo': newSaldo});
-        print('Saldo berhasil diupdate');
         return true;
       } else {
-        print('Pengguna tidak ditemukan');
         return false;
       }
     } catch (e) {
-      print('Terjadi kesalahan: $e');
       return false;
     }
   }

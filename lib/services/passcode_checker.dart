@@ -14,7 +14,6 @@ class PasscodeChecker {
           .data();
       return userData != null && userData.containsKey('passcode');
     } catch (e) {
-      print("Error checking passcode field: $e");
       return false;
     }
   }
@@ -33,7 +32,6 @@ class PasscodeChecker {
         return false;
       }
     } catch (e) {
-      print("Terjadi kesalahan saat mengambil passcode: $e");
       return false;
     }
   }

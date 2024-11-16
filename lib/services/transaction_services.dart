@@ -17,7 +17,7 @@ class TransactionService {
         'description': description,
       });
     } catch (e) {
-      print('Terjadi kesalahan saat menyimpan transaksi: $e');
+      return;
     }
   }
 }
