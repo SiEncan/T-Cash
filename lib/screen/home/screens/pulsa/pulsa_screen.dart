@@ -1,7 +1,7 @@
-import 'package:fintar/screen/home/screens/widgets/pulsa_grid_widget.dart';
+import 'package:fintar/screen/home/screens/pulsa/widgets/pulsa_grid_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fintar/screen/home/screens/widgets/phone_input_widget.dart';
+import 'package:fintar/screen/home/screens/pulsa/widgets/phone_input_widget.dart';
 
 class PulsaScreen extends StatefulWidget {
   const PulsaScreen({super.key});

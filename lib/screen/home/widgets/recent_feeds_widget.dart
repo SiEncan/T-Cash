@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fintar/screen/home/screens/pulsa_screen.dart';
+import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

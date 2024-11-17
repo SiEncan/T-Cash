@@ -1,4 +1,5 @@
-import 'package:fintar/screen/home/screens/pulsa_screen.dart';
+import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
+import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +71,8 @@ class PurchaseMenu extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: _featureIcon(
                     Icons.electric_bolt_sharp, 'PLN', Colors.blue, () {
-                  // gesture
+                  Navigator.of(context)
+                      .push(createRoute(const PlnScreen(), 2.0, 0));
                 }),
               ),
               Padding(

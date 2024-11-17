@@ -3,7 +3,7 @@ import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
-import 'package:fintar/screen/home/screens/widgets/pulsa_card_widget.dart';
+import 'package:fintar/screen/home/screens/pulsa/widgets/pulsa_card_widget.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/services/saldo_services.dart';
 import 'package:fintar/services/transaction_services.dart';
