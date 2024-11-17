@@ -8,158 +8,131 @@ class PromoCodePage extends StatefulWidget {
 }
 
 class _PromoCodePageState extends State<PromoCodePage> {
+  final TextEditingController promoCodeController = TextEditingController();
+  bool _isLoading = false;
+  String? _discountMessage;
+
+  // Simulasi daftar kode promo
+  final Map<String, String> promoCodes = {
+    'DISCOUNT10': '10% off on your next purchase',
+    'FREESHIP': 'Free shipping on orders above \$50',
+    'SAVE20': '20% off for first-time users',
+  };
+
+  void _redeemPromoCode() async {
+    setState(() {
+      _isLoading = true;
+      _discountMessage = null; // Reset pesan sebelumnya
+    });
+
+    await Future.delayed(const Duration(seconds: 1)); // Simulasi API call
+
+    final code = promoCodeController.text.trim().toUpperCase();
+    if (promoCodes.containsKey(code)) {
+      setState(() {
+        _discountMessage = promoCodes[code];
+      });
+    } else {
+      setState(() {
+        _discountMessage = 'Invalid promo code. Please try again.';
+      });
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.blue, // Background biru penuh
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text(
-          'Profile Settings',
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        backgroundColor: Colors.blue, // Warna app bar sama dengan background
+        elevation: 0, // Hilangkan bayangan pada AppBar
       ),
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildSection([
-              _buildSettingItem(
-                'Account Type',
-                'DANA Premium',
-                showArrow: true,
-                isBlue: true,
-              ),
-              _buildSettingItem(
-                'Profile Picture',
-                '',
-                showArrow: true,
-                leading: const CircleAvatar(
-                  radius: 15,
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, size: 20, color: Colors.white),
-                ),
-              ),
-              _buildSettingItem(
-                'Real Name',
-                'SEBASTIAN WIJAYANTO',
-                showArrow: false,
-              ),
-              _buildSettingItem(
-                'Username',
-                'sebastian',
-                showArrow: true,
-                isBlue: true,
-              ),
-              _buildSettingItem(
-                'Mobile Number',
-                '62 *** 6367',
-                showArrow: true,
-              ),
-              _buildSettingItem(
-                'Email Address',
-                'a **** @gmail.com',
-                showArrow: true,
-              ),
-              _buildSettingItem(
-                'BI-FAST Account',
-                'Manage',
-                showArrow: true,
-                isBlue: true,
-              ),
-            ]),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSection(List<Widget> children) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(children: children),
-    );
-  }
-
-  Widget _buildSettingItem(String title, String value,
-      {bool showArrow = true, Widget? leading, bool isBlue = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
-          ),
-        ),
-      ),
-      child: ListTile(
-        leading: leading,
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-          ),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              value,
+            const Text(
+              'Enter your promo code below to redeem discounts:',
               style: TextStyle(
-                fontSize: 14,
-                color: isBlue ? Colors.blue : Colors.grey[600],
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.white, // Teks berwarna putih
               ),
             ),
-            if (showArrow)
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey[400],
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: promoCodeController,
+                    decoration: InputDecoration(
+                      labelText: 'Promo Code',
+                      labelStyle: const TextStyle(color: Colors.blue),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.blue),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.blue),
+                        onPressed: () {
+                          promoCodeController.clear();
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                          )
+                        : ElevatedButton(
+                            onPressed: _redeemPromoCode,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white, // Tombol putih
+                              foregroundColor: Colors.blue, // Teks tombol biru
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 32),
+                            ),
+                            child: const Text('Redeem'),
+                          ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            if (_discountMessage != null)
+              Center(
+                child: Text(
+                  _discountMessage!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: _discountMessage!.startsWith('Invalid')
+                        ? const Color.fromARGB(255, 255, 67, 54)
+                        : const Color.fromARGB(255, 38, 255, 45),
+                  ),
+                ),
               ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchItem(
-      String title, String subtitle, bool value, Function(bool) onChanged) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              Switch(
-                value: value,
-                onChanged: onChanged,
-                activeColor: Colors.blue,
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
       ),
     );
   }

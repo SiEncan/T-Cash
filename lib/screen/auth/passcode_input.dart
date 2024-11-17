@@ -1,5 +1,5 @@
 import 'package:fintar/services/passcode_checker.dart';
-import 'package:fintar/widgets/modal.dart';
+import 'package:fintar/widgets/auto_close_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:simple_numpad/simple_numpad.dart';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/expense_page.dart';
 
 class IncomePage extends StatefulWidget {
   const IncomePage({super.key});
@@ -8,159 +10,159 @@ class IncomePage extends StatefulWidget {
 }
 
 class _IncomePageState extends State<IncomePage> {
+  // Dummy data for daily tracking
+  final List<double> dailyData = [50, 100, 150, 80, 200, 120, 90];
+  final List<Map<String, dynamic>> transactions = [
+    {'date': '2024-11-15', 'amount': 50, 'description': 'Groceries'},
+    {'date': '2024-11-15', 'amount': 20, 'description': 'Transport'},
+    {'date': '2024-11-14', 'amount': 80, 'description': 'Dining'},
+    {'date': '2024-11-13', 'amount': 100, 'description': 'Shopping'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text(
-          'Profile Settings',
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildSection([
-              _buildSettingItem(
-                'Account Type',
-                'DANA Premium',
-                showArrow: true,
-                isBlue: true,
-              ),
-              _buildSettingItem(
-                'Profile Picture',
-                '',
-                showArrow: true,
-                leading: const CircleAvatar(
-                  radius: 15,
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, size: 20, color: Colors.white),
-                ),
-              ),
-              _buildSettingItem(
-                'Real Name',
-                'SEBASTIAN WIJAYANTO',
-                showArrow: false,
-              ),
-              _buildSettingItem(
-                'Username',
-                'sebastian',
-                showArrow: true,
-                isBlue: true,
-              ),
-              _buildSettingItem(
-                'Mobile Number',
-                '62 *** 6367',
-                showArrow: true,
-              ),
-              _buildSettingItem(
-                'Email Address',
-                'a **** @gmail.com',
-                showArrow: true,
-              ),
-              _buildSettingItem(
-                'BI-FAST Account',
-                'Manage',
-                showArrow: true,
-                isBlue: true,
-              ),
-            ]),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSection(List<Widget> children) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(children: children),
-    );
-  }
-
-  Widget _buildSettingItem(String title, String value,
-      {bool showArrow = true, Widget? leading, bool isBlue = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: const Text(
+            'Income',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-      ),
-      child: ListTile(
-        leading: leading,
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
+        body: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
           ),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 14,
-                color: isBlue ? Colors.blue : Colors.grey[600],
-              ),
-            ),
-            if (showArrow)
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey[400],
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchItem(
-      String title, String subtitle, bool value, Function(bool) onChanged) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
+              // Tombol navigasi ke halaman lain
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Arahkan ke halaman expense tracking (saat ini dummy)
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ExpensePage()),
+                        );
+                      },
+                      child: const Text('Go to Expense'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Arahkan ke halaman income tracking (saat ini dummy)
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const IncomePage()),
+                        );
+                      },
+                      child: const Text('Go to Income'),
+                    ),
+                  ],
                 ),
               ),
-              Switch(
-                value: value,
-                onChanged: onChanged,
-                activeColor: Colors.blue,
+              // Grafik bagian atas
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                height: 250,
+                child: LineChart(
+                  LineChartData(
+                    lineBarsData: [
+                      LineChartBarData(
+                        isCurved: true,
+                        spots: dailyData
+                            .asMap()
+                            .entries
+                            .map((entry) =>
+                                FlSpot(entry.key.toDouble(), entry.value))
+                            .toList(),
+                        barWidth: 4,
+                        isStrokeCapRound: true,
+                        color: Colors.blue,
+                        belowBarData: BarAreaData(
+                          show: true,
+                          color: Colors.blue.withOpacity(0.3),
+                        ),
+                      ),
+                    ],
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 50,
+                          getTitlesWidget: (value, _) {
+                            return Text(
+                              value.toInt().toString(),
+                              style: const TextStyle(fontSize: 12),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget: (value, _) {
+                            const days = [
+                              'Mon',
+                              'Tue',
+                              'Wed',
+                              'Thu',
+                              'Fri',
+                              'Sat',
+                              'Sun'
+                            ];
+                            return Text(
+                              days[value.toInt() % days.length],
+                              style: const TextStyle(fontSize: 12),
+                            );
+                          },
+                        ),
+                      ),
+                      rightTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            showTitles: false), // Matikan judul di sumbu kanan
+                      ),
+                      topTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            showTitles: false), // Matikan judul di sumbu atas
+                      ),
+                    ),
+                    borderData: FlBorderData(show: false),
+                    gridData: FlGridData(show: true),
+                  ),
+                ),
+              ),
+              const Divider(),
+              // Riwayat transaksi bagian bawah
+              Expanded(
+                child: ListView.builder(
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = transactions[index];
+                    return ListTile(
+                      leading: const Icon(Icons.attach_money),
+                      title: Text('${transaction['description']}'),
+                      subtitle: Text('Date: ${transaction['date']}'),
+                      trailing: Text('\$${transaction['amount']}'),
+                    );
+                  },
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
