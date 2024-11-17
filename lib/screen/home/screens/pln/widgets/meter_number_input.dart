@@ -91,7 +91,7 @@ class MeterNumberInputState extends State<MeterNumberInput> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.asset(
-                                    'img/portal.jpg',
+                                    'img/meteran.jpg',
                                     height: 100,
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.cover,
