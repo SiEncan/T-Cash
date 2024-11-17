@@ -162,17 +162,6 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                     'saldo': 0
                   });
 
-                  await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(userId)
-                      .collection('transactionHistory')
-                      .add({
-                    'amount': 0.0,
-                    'date': Timestamp.now(),
-                    'type': 'Initial Deposit',
-                    'description': 'Initial account creation',
-                  });
-
                   // Navigasi ke halaman utama setelah berhasil
                   Navigator.pushReplacement(
                       context,

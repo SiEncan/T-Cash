@@ -372,7 +372,8 @@ class PulsaGrid extends StatelessWidget {
                 userId,
                 hargaFormatted,
                 'Payment',
-                'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}');
+                'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}',
+                'Nomor Tujuan: $phoneNumber');
 
             Navigator.pop(context);
 
