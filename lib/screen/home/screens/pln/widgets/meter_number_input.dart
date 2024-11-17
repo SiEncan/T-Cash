@@ -19,6 +19,14 @@ class MeterNumberInputState extends State<MeterNumberInput> {
       TextEditingController();
   bool inputValid = false;
   String meterNumber = '';
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    meterNumberInputController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +153,7 @@ class MeterNumberInputState extends State<MeterNumberInput> {
         ),
         const SizedBox(height: 6),
         TextField(
+          focusNode: focusNode,
           controller: meterNumberInputController,
           maxLength: 12,
           keyboardType: TextInputType.number,
@@ -199,6 +208,7 @@ class MeterNumberInputState extends State<MeterNumberInput> {
                 );
               }
             });
+            focusNode.unfocus();
           },
         ),
         if (inputValid)
