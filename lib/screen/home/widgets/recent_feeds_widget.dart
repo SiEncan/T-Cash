@@ -44,7 +44,7 @@ class RecentFeeds extends StatelessWidget {
                 children: List.generate(transactions.length, (index) {
                   final transaction =
                       transactions[index].data() as Map<String, dynamic>;
-                  final amount = (transaction['amount'] as double).toInt();
+                  final amount = transaction['amount'] as int;
                   final date = (transaction['date'] as Timestamp).toDate();
                   final type = transaction['type'] as String;
                   final partyName = transaction['partyName'] as String?;
