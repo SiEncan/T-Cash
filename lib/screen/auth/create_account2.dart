@@ -148,8 +148,6 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                     password: widget.password,
                   );
 
-                  String userId = userCredential.user!.uid;
-
                   // Simpan data tambahan ke Firestore
                   FirebaseFirestore.instance
                       .collection('users')

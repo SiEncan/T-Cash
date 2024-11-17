@@ -205,6 +205,7 @@ class MeterNumberInputState extends State<MeterNumberInput> {
           Row(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
                   Text(
