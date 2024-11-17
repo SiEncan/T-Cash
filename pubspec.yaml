@@ -42,6 +42,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   simple_numpad: ^1.0.5
   image_picker: ^0.8.7+3
+  fl_chart: ^0.69.0
 
 dev_dependencies:
   flutter_test:
