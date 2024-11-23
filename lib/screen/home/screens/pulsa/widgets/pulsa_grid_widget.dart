@@ -23,8 +23,8 @@ class PulsaGrid extends StatelessWidget {
 
   final passcodeChecker = PasscodeChecker();
   final authService = AuthService();
-  final SaldoService _saldoService = SaldoService();
-  final TransactionService _transactionService = TransactionService();
+  final SaldoService saldoService = SaldoService();
+  final TransactionService transactionService = TransactionService();
 
   final List<String> jumlahPulsa = [
     '5k',
@@ -365,15 +365,14 @@ class PulsaGrid extends StatelessWidget {
           }
 
           bool isSaldoSufficient =
-              await _saldoService.reduceSaldo(userId, hargaFormatted);
+              await saldoService.reduceSaldo(userId, hargaFormatted);
 
           if (isSaldoSufficient) {
-            await _transactionService.saveTransaction(
-                userId,
-                hargaFormatted,
-                'Payment',
-                'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}',
-                'Nomor Tujuan: $phoneNumber');
+            await transactionService.saveTransaction(userId, 'Payment',
+                amount: hargaFormatted,
+                description:
+                    'Pulsa $selectedProviderParam ${jumlahPulsa[index].replaceAll('k', '.000')}',
+                additionalInfo: 'Nomor Tujuan: $phoneNumber');
 
             Navigator.pop(context);
 

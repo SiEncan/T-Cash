@@ -11,6 +11,18 @@ class RecentFeeds extends StatelessWidget {
   });
   final userId = AuthService().getUserId();
 
+  String _formatAmount(dynamic amount) {
+    String text = amount is int ? amount.toString() : amount.toString();
+
+    if (text.isEmpty) return '';
+    final number = int.parse(text.replaceAll(RegExp(r'[^0-9]'), ''));
+
+    return 'Rp${number.toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+        )}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -39,7 +51,7 @@ class RecentFeeds extends StatelessWidget {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+              padding: const EdgeInsets.only(top: 4),
               child: Column(
                 children: List.generate(transactions.length, (index) {
                   final transaction =
@@ -53,67 +65,130 @@ class RecentFeeds extends StatelessWidget {
                   final formattedDate = DateFormat('E, dd-MM').format(date);
 
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 2.0),
+                    padding: const EdgeInsets.only(bottom: 3),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.notifications_active,
                             size: 20, color: Colors.blue[400]),
                         const SizedBox(width: 8),
-                        (type == "Transfer in")
-                            ? Text(
-                                partyName!,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w800),
-                              )
-                            : (type == "Transfer out")
-                                ? Text(
-                                    "You sent Rp$amount to ",
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  )
-                                : const Text(
-                                    'You Just Bought ',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                        (type == "Transfer in")
-                            ? Text(
-                                " sent you Rp$amount",
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w400),
-                              )
-                            : (type == "Transfer out")
-                                ? Text(
-                                    partyName!,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800),
-                                  )
-                                : Text(
-                                    description!,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800),
-                                  ),
-                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                  child: (type == "Transfer in")
+                                      ? Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: "$partyName ",
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              const TextSpan(
+                                                text: "sent you ",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              TextSpan(
+                                                text: _formatAmount(amount),
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.green[800]),
+                                              ),
+                                            ],
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        )
+                                      : (type == "Transfer out")
+                                          ? Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  const TextSpan(
+                                                    text: "You sent ",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                  TextSpan(
+                                                    text: _formatAmount(amount),
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.red[800]),
+                                                  ),
+                                                  const TextSpan(
+                                                    text: " to ",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                  TextSpan(
+                                                    text: partyName,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                ],
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            )
+                                          : Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  const TextSpan(
+                                                    text: "You just bought ",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                  TextSpan(
+                                                    text: description,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                ],
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            )),
+                            ],
+                          ),
+                        ),
+                        // const SizedBox(width: 4),
                         (type == "Transfer in")
                             ? Icon(Icons.south_outlined,
                                 size: 20, color: Colors.green[400])
                             : (type == "Transfer out")
                                 ? Icon(Icons.north,
                                     size: 20, color: Colors.red[300])
-                                : Icon(Icons.shopping_bag_outlined,
+                                : Icon(Icons.shopping_cart,
                                     size: 20, color: Colors.blue[400]),
-                        const Spacer(),
+                        const SizedBox(width: 8),
                         Text(
                           formattedDate,
                           style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500),
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ],
                     ),

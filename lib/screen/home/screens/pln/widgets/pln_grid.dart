@@ -390,12 +390,10 @@ class PlnGridWidget extends StatelessWidget {
               await _saldoService.reduceSaldo(userId, hargaFormatted);
 
           if (isSaldoSufficient) {
-            await _transactionService.saveTransaction(
-                userId,
-                hargaFormatted,
-                'Payment',
-                'Token PLN $tokenDisplay',
-                'Meter Number: $meterNumber');
+            await _transactionService.saveTransaction(userId, 'Payment',
+                amount: hargaFormatted,
+                description: 'Token PLN $tokenDisplay',
+                additionalInfo: 'Meter Number: $meterNumber');
 
             Navigator.pop(context);
 
