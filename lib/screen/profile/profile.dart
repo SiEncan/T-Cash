@@ -1,12 +1,13 @@
 // profile.dart
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/user_profile.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/balance.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/family_acc.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/tcash_cicil.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/transaction_history.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/income_page.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/expense_page.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/mybills_page.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/donation.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/promocode.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/help_center.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/terms_conditions.dart';
@@ -20,6 +21,72 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String profileName = 'Loading...';
+  String profilePhone = 'Loading...';
+  String profileImageUrl = '';
+  String profileBalance = 'Loading..';
+  String profileIncome = 'Loading..';
+  String profileExpense = 'Loading..';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    try {
+      // Dapatkan user ID dari Firebase Authentication
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+      if (userId == null) {
+        print('User ID not found');
+        return;
+      }
+
+      // Ambil data user dari Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        setState(() {
+          profileName = userDoc['fullName'] ?? 'No Name';
+          profilePhone = userDoc['phone'] ?? 'No Number';
+          profileImageUrl = userDoc['profileImageUrl'] ?? '';
+          profileBalance =
+              'Rp${(userDoc['saldo'] ?? 0).toString().replaceAllMapped(
+                    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                    (Match m) => '${m[1]}.',
+                  )}'; // Format saldo
+          profileIncome =
+              'Rp${(userDoc['income'] ?? 0).toString().replaceAllMapped(
+                    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                    (Match m) => '${m[1]}.',
+                  )}'; // Format saldo
+          profileExpense =
+              'Rp${(userDoc['expense'] ?? 0).toString().replaceAllMapped(
+                    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                    (Match m) => '${m[1]}.',
+                  )}'; // Format saldo
+          isLoading = false;
+        });
+      } else {
+        print('User document does not exist!');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching user profile: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +99,7 @@ class _ProfileState extends State<Profile> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
+                mainAxisSize: MainAxisSize.min, // Biarkan tinggi fleksibel
                 children: [
                   // Feature Grid
                   Container(
@@ -42,7 +110,7 @@ class _ProfileState extends State<Profile> {
                         _buildFeatureItem(
                           Icons.account_balance,
                           'Balance',
-                          'Rp1.000.000',
+                          profileBalance,
                           () {
                             Navigator.push(
                               context,
@@ -51,29 +119,29 @@ class _ProfileState extends State<Profile> {
                             );
                           },
                         ),
-                        const SizedBox(width: 30),
                         _buildFeatureItem(
-                          Icons.family_restroom,
-                          'Family Acc',
-                          'Let\'s Activate!',
+                          Icons.history,
+                          'Transaction History',
+                          'All Transactions',
                           () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FamilyAccPage()),
+                                builder: (context) => TransactionHistory(),
+                              ),
                             );
                           },
                         ),
-                        const SizedBox(width: 30),
                         _buildFeatureItem(
-                          Icons.repeat,
-                          'T-Cash Cicil',
-                          'Start Now',
+                          Icons.volunteer_activism,
+                          'Donation Hub',
+                          'Support system',
                           () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => TcashCicilPage()),
+                                builder: (context) => DonationHub(),
+                              ),
                             );
                           },
                         ),
@@ -89,9 +157,9 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildTransactionItem(
-                          Icons.arrow_downward,
+                          Icons.arrow_upward,
                           'Income',
-                          'Rp60.000',
+                          profileIncome,
                           Colors.green,
                           () {
                             Navigator.push(
@@ -103,9 +171,9 @@ class _ProfileState extends State<Profile> {
                         ),
                         const SizedBox(width: 40),
                         _buildTransactionItem(
-                          Icons.arrow_upward,
+                          Icons.arrow_downward,
                           'Expense',
-                          'Rp45.000',
+                          profileExpense,
                           Colors.orange,
                           () {
                             Navigator.push(
@@ -127,13 +195,6 @@ class _ProfileState extends State<Profile> {
                     ),
                     child: Column(
                       children: [
-                        _buildMenuItem('My Bills', '1 Bill', () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyBillsPage()),
-                          );
-                        }),
                         _buildMenuItem('Enter Promo Code', '', () {
                           Navigator.push(
                             context,
@@ -185,6 +246,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 120), // Spasi tambahan di bagian bawah
                 ],
               ),
             ),
@@ -194,7 +256,7 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.only(top: 30),
             height: 120,
             decoration: const BoxDecoration(
-              color: Colors.blue,
+              color: Color.fromARGB(255, 0, 124, 226),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -215,68 +277,106 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _buildProfileInfo() {
-    return Container(
-      color: Colors.blue, // Mengatur latar belakang menjadi biru
-      padding: const EdgeInsets.all(
-          16), // Menambahkan padding agar konten lebih nyaman
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const UserProfile()),
-        ),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person, size: 40, color: Colors.white),
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'SEBASTIAN WIJAYANTO',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors
-                            .white), // Ubah teks menjadi putih agar kontras dengan latar belakang biru
-                  ),
-                  Text(
-                    '0852 **** 1234',
-                    style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14), // Ubah teks menjadi putih
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors
-                    .white, // Memberi warna putih agar kontras dengan latar belakang biru
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(20),
-              ),
+          )
+        : GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const UserProfile(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0); // Slide from right
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
-                children: const [
-                  Icon(Icons.verified_user, size: 16, color: Colors.blue),
-                  SizedBox(width: 4),
-                  Text(
-                    'MY QR',
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
+                children: [
+                  // Avatar
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: profileImageUrl.isNotEmpty
+                        ? NetworkImage(profileImageUrl)
+                        : null,
+                    child: profileImageUrl.isEmpty
+                        ? const Icon(Icons.person,
+                            size: 40, color: Colors.white)
+                        : null,
+                  ),
+                  const SizedBox(width: 16), // Spasi antar avatar dan teks
+                  // Informasi profil
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profileName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(
+                            height: 4), // Spasi antar nama dan nomor telepon
+                        Text(
+                          profilePhone,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Tombol "MY QR"
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.verified_user, size: 16, color: Colors.blue),
+                        SizedBox(width: 4), // Spasi antar ikon dan teks
+                        Text(
+                          'MY QR',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget _buildFeatureItem(

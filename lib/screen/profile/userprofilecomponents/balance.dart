@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/balance/bank_transfer.dart';
 
 class BalancePage extends StatefulWidget {
   const BalancePage({super.key});
@@ -15,7 +16,7 @@ class _BalancePageState extends State<BalancePage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Profile Settings',
+          'Balance',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -24,51 +25,29 @@ class _BalancePageState extends State<BalancePage> {
         ),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              'How would you like to top up your balance?',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
             _buildSection([
               _buildSettingItem(
-                'Account Type',
-                'DANA Premium',
-                showArrow: true,
-                isBlue: true,
-              ),
-              _buildSettingItem(
-                'Profile Picture',
-                '',
-                showArrow: true,
-                leading: const CircleAvatar(
-                  radius: 15,
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, size: 20, color: Colors.white),
-                ),
-              ),
-              _buildSettingItem(
-                'Real Name',
-                'SEBASTIAN WIJAYANTO',
-                showArrow: false,
-              ),
-              _buildSettingItem(
-                'Username',
-                'sebastian',
-                showArrow: true,
-                isBlue: true,
-              ),
-              _buildSettingItem(
-                'Mobile Number',
-                '62 *** 6367',
-                showArrow: true,
-              ),
-              _buildSettingItem(
-                'Email Address',
-                'a **** @gmail.com',
-                showArrow: true,
-              ),
-              _buildSettingItem(
-                'BI-FAST Account',
-                'Manage',
-                showArrow: true,
-                isBlue: true,
+                title: 'Bank Transfer',
+                subtitle: 'Transfer via Bank to top up your balance.',
+                leading: const Icon(Icons.account_balance, color: Colors.blue),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          BankTransferPage(), // Arahkan ke page bank_transfer.dart
+                    ),
+                  );
+                },
               ),
             ]),
           ],
@@ -88,79 +67,73 @@ class _BalancePageState extends State<BalancePage> {
     );
   }
 
-  Widget _buildSettingItem(String title, String value,
-      {bool showArrow = true, Widget? leading, bool isBlue = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
+  Widget _buildSettingItem({
+    required String title,
+    required String subtitle,
+    Widget? leading,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey[200]!,
+              width: 1,
+            ),
           ),
         ),
-      ),
-      child: ListTile(
-        leading: leading,
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-          ),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
           children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 14,
-                color: isBlue ? Colors.blue : Colors.grey[600],
+            if (leading != null) ...[
+              leading,
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
             ),
-            if (showArrow)
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey[400],
-              ),
+            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSwitchItem(
-      String title, String subtitle, bool value, Function(bool) onChanged) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              Switch(
-                value: value,
-                onChanged: onChanged,
-                activeColor: Colors.blue,
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
+  void _showTopUpDialog(String method) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Top Up via $method'),
+          content:
+              const Text('Follow the instructions to complete your top-up.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 }

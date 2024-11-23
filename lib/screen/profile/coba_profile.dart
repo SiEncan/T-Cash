@@ -1,24 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+class CobaProfile extends StatefulWidget {
+  const CobaProfile({super.key});
 
   @override
-  State<UserProfile> createState() => _UserProfileState();
+  State<CobaProfile> createState() => _CobaProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _CobaProfileState extends State<CobaProfile> {
   String userId = '';
   String profileImageUrl = '';
   String username = '';
-  String mobileNumber = '';
-  String email = '';
   bool isLoading = true;
 
   @override
@@ -33,7 +31,7 @@ class _UserProfileState extends State<UserProfile> {
       setState(() {
         userId = currentUser.uid;
       });
-      _fetchUserProfile();
+      await _fetchUserProfile();
     } else {
       print('No user logged in!');
       setState(() {
@@ -43,11 +41,6 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future<void> _fetchUserProfile() async {
-    if (userId.isEmpty) {
-      print('UserId is empty!');
-      return;
-    }
-
     try {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -57,9 +50,7 @@ class _UserProfileState extends State<UserProfile> {
       if (userDoc.exists) {
         setState(() {
           profileImageUrl = userDoc['profileImageUrl'] ?? '';
-          username = userDoc['fullName'] ?? '';
-          mobileNumber = userDoc['phone'] ?? '';
-          email = userDoc['email'] ?? '';
+          username = userDoc['fullName'] ?? 'No Name';
           isLoading = false;
         });
       } else {
@@ -76,21 +67,7 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
-  Future<void> _updateUserProfile(String field, String value) async {
-    if (userId.isEmpty) return;
-
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .update({field: value});
-      print('$field updated successfully!');
-    } catch (e) {
-      print('Error updating $field: $e');
-    }
-  }
-
-  Future<String?> _uploadImageToCloudinary(File image) async {
+  Future<String?> uploadImagetoCloudinary(File image) async {
     String cloudName = 'dm0brovfk';
     String apiKey = '996164835147661';
     String apiSecret = '6unpohh6GYqJYW027mDU2vgl03E';
@@ -117,63 +94,26 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  Future<void> saveProfileInfoToFirestore(String imageUrl) async {
+    if (userId.isNotEmpty) {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'profileImageUrl': imageUrl,
+      });
+    }
+  }
+
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      String? imageUrl = await _uploadImageToCloudinary(File(image.path));
-      if (imageUrl != null) {
+      String? imagePath = await uploadImagetoCloudinary(File(image.path));
+      if (imagePath != null) {
+        await saveProfileInfoToFirestore(imagePath);
         setState(() {
-          profileImageUrl = imageUrl;
+          profileImageUrl = imagePath;
         });
-        _updateUserProfile('profileImageUrl', imageUrl);
       }
     }
-  }
-
-  void _editProfileField(String title, String initialValue, String field) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        TextEditingController controller =
-            TextEditingController(text: initialValue);
-        return AlertDialog(
-          title: Text('Edit $title'),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(hintText: 'Enter new $title'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  switch (field) {
-                    case 'username':
-                      username = controller.text;
-                      break;
-                    case 'mobileNumber':
-                      mobileNumber = controller.text;
-                      break;
-                    case 'email':
-                      email = controller.text;
-                      break;
-                  }
-                });
-                _updateUserProfile(field, controller.text);
-                Navigator.pop(context);
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -202,12 +142,6 @@ class _UserProfileState extends State<UserProfile> {
           children: [
             _buildSection([
               _buildSettingItem(
-                'Account Type',
-                'T-CASH Premium',
-                showArrow: false,
-                isBlue: true,
-              ),
-              _buildSettingItem(
                 'Profile Picture',
                 '',
                 showArrow: true,
@@ -215,8 +149,8 @@ class _UserProfileState extends State<UserProfile> {
                   radius: 25,
                   backgroundColor: Colors.grey,
                   backgroundImage: profileImageUrl.isNotEmpty
-                      ? NetworkImage(profileImageUrl)
-                      : null,
+                      ? NetworkImage(profileImageUrl) as ImageProvider
+                      : const AssetImage('img/T-Cash_Logo.png'),
                   child: profileImageUrl.isEmpty
                       ? const Icon(Icons.person, size: 40, color: Colors.white)
                       : null,
@@ -226,23 +160,7 @@ class _UserProfileState extends State<UserProfile> {
               _buildSettingItem(
                 'Username',
                 username,
-                showArrow: true,
-                isBlue: true,
-                onTap: () =>
-                    _editProfileField('Username', username, 'username'),
-              ),
-              _buildSettingItem(
-                'Mobile Number',
-                mobileNumber,
-                showArrow: true,
-                onTap: () => _editProfileField(
-                    'Mobile Number', mobileNumber, 'mobileNumber'),
-              ),
-              _buildSettingItem(
-                'Email Address',
-                email,
-                showArrow: true,
-                onTap: () => _editProfileField('Email Address', email, 'email'),
+                showArrow: false,
               ),
             ]),
           ],
@@ -253,7 +171,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildSection(List<Widget> children) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -263,10 +181,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildSettingItem(String title, String value,
-      {bool showArrow = true,
-      Widget? leading,
-      bool isBlue = false,
-      VoidCallback? onTap}) {
+      {bool showArrow = true, Widget? leading, VoidCallback? onTap}) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -291,7 +206,7 @@ class _UserProfileState extends State<UserProfile> {
               value,
               style: TextStyle(
                 fontSize: 14,
-                color: isBlue ? Colors.blue : Colors.grey[600],
+                color: Colors.grey[600],
               ),
             ),
             if (showArrow)
