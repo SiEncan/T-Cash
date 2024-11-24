@@ -148,11 +148,14 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Container(
+              margin: const EdgeInsets.only(
+                top: 62,
+              ),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.fromLTRB(8, 0, 32, 8),
                     height: 250,
                     child: dailyDates.isNotEmpty
                         ? LineChart(LineChartData(
@@ -366,7 +369,8 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
 
                           final transaction = filteredTransactions[index];
                           return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 2),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
