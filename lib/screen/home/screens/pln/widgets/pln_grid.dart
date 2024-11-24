@@ -1,11 +1,13 @@
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:fintar/screen/auth/passcode_input.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/terms_conditions.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/services/saldo_services.dart';
 import 'package:fintar/services/transaction_services.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -338,10 +340,15 @@ class PlnGridWidget extends StatelessWidget {
                                     style: TextStyle(
                                         color: Colors.grey[600], fontSize: 12),
                                   ),
-                                  const TextSpan(
+                                  TextSpan(
                                     text: 'Terms and Conditions',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.green, fontSize: 12),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.of(context).push(createRoute(
+                                            const TermsConditions(), 0, 1));
+                                      },
                                   ),
                                 ],
                               ),
