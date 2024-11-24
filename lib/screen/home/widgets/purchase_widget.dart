@@ -1,3 +1,4 @@
+import 'package:fintar/screen/home/screens/applezone/applezone_screen.dart';
 import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
@@ -64,7 +65,8 @@ class PurchaseMenu extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _featureIcon(Icons.apple, 'Apple Zone', Colors.blue, () {
-                  // gesture
+                  Navigator.of(context)
+                      .push(createRoute(const AppleZoneScreen(), -1.0, 0));
                 }),
               ),
               Padding(
@@ -100,8 +102,6 @@ Widget _featureIcon(
   return GestureDetector(
     onTap: onTap,
     child: Column(
-      // mainAxisAlignment: MainAxisAlignment.start,
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 30, color: color),
         const SizedBox(height: 8), // Jarak antara icon dan label
