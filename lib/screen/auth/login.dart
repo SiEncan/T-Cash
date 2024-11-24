@@ -1,3 +1,4 @@
+import 'package:fintar/screen/auth/forgot_password.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -200,7 +201,10 @@ class LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // Logika tombol
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPassword()));
                     },
                     child: Text(
                       'Forget Password?',
