@@ -145,40 +145,94 @@ class RecentFeeds extends StatelessWidget {
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             )
-                                          : Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  const TextSpan(
-                                                    text: "You just bought ",
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
+                                          : (type == "Payment")
+                                              ? Text.rich(
                                                   TextSpan(
-                                                    text: description,
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w800),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text:
+                                                            "You just bought ",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ),
+                                                      TextSpan(
+                                                        text: description,
+                                                        style: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                            )),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                )
+                                              : (type == "Top-Up")
+                                                  ? Text.rich(
+                                                      TextSpan(
+                                                        children: [
+                                                          const TextSpan(
+                                                            text:
+                                                                "You just Topped-Up ",
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                          ),
+                                                          TextSpan(
+                                                            text: _formatAmount(
+                                                                amount),
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                                color: Colors
+                                                                        .green[
+                                                                    800]),
+                                                          ),
+                                                          TextSpan(
+                                                            text:
+                                                                " by $description",
+                                                            style: const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                    )
+                                                  : const Text(
+                                                      "No valid action",
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    )),
                             ],
                           ),
                         ),
-                        // const SizedBox(width: 4),
                         (type == "Transfer in")
                             ? Icon(Icons.south_outlined,
                                 size: 20, color: Colors.green[400])
                             : (type == "Transfer out")
                                 ? Icon(Icons.north,
                                     size: 20, color: Colors.red[300])
-                                : Icon(Icons.shopping_cart,
-                                    size: 20, color: Colors.blue[400]),
+                                : (type == "Payment")
+                                    ? Icon(Icons.shopping_cart,
+                                        size: 20, color: Colors.blue[400])
+                                    : (type == "Top-Up")
+                                        ? Icon(Icons.account_balance,
+                                            size: 20, color: Colors.blue[400])
+                                        : const Icon(Icons.error_outline),
                         const SizedBox(width: 8),
                         Text(
                           formattedDate,

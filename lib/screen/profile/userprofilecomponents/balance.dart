@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/balance/bank_transfer.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/balance/topup_balance.dart';
 
 class BalancePage extends StatefulWidget {
-  const BalancePage({super.key});
+  final String userId;
+
+  const BalancePage({super.key, required this.userId});
 
   @override
   State<BalancePage> createState() => _BalancePageState();
@@ -36,15 +38,14 @@ class _BalancePageState extends State<BalancePage> {
             const SizedBox(height: 16),
             _buildSection([
               _buildSettingItem(
-                title: 'Bank Transfer',
-                subtitle: 'Transfer via Bank to top up your balance.',
+                title: 'Virtual Account',
+                subtitle: 'Transfer via Bank VA to top up your balance.',
                 leading: const Icon(Icons.account_balance, color: Colors.blue),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          BankTransferPage(), // Arahkan ke page bank_transfer.dart
+                      builder: (context) => TopUpBalance(userId: widget.userId),
                     ),
                   );
                 },
@@ -107,6 +108,7 @@ class _BalancePageState extends State<BalancePage> {
                       fontSize: 14,
                       color: Colors.grey[600],
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

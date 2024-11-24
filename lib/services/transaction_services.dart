@@ -29,6 +29,10 @@ class TransactionService {
           'description': description,
           'additionalInfo': additionalInfo,
         });
+      } else if (type == 'Top-Up') {
+        transactionData.addAll({
+          'description': description,
+        });
       }
       await _firestore
           .collection('users')

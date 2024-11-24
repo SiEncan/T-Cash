@@ -29,6 +29,7 @@ class _ProfileState extends State<Profile> {
   String profileBalance = 'Loading..';
   String profileIncome = 'Loading..';
   String profileExpense = 'Loading..';
+  String profileUserId = '';
   bool isLoading = true;
 
   @override
@@ -55,6 +56,7 @@ class _ProfileState extends State<Profile> {
 
       if (userDoc.exists) {
         setState(() {
+          profileUserId = userId;
           profileName = userDoc['fullName'] ?? 'No Name';
           profilePhone = userDoc['phone'] ?? 'No Number';
           profileImageUrl = userDoc['profileImageUrl'] ?? '';
@@ -117,7 +119,8 @@ class _ProfileState extends State<Profile> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BalancePage()),
+                                  builder: (context) =>
+                                      BalancePage(userId: profileUserId)),
                             );
                           },
                         ),
