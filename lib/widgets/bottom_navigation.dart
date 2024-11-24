@@ -1,7 +1,6 @@
 import 'package:fintar/screen/auth/logout_screen.dart';
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:fintar/screen/profile/profile.dart';
-import 'package:fintar/screen/qr/generateQr.dart';
 import 'package:fintar/screen/qr/qrScanner.dart';
 import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
@@ -21,8 +20,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   final List<Widget> _pages = [
     const HomeTab(),
-    // const Center(child: Text('Activity', style: TextStyle(fontSize: 24))),
-    UserQRCode(),
+    const Center(child: Text('Activity', style: TextStyle(fontSize: 24))),
     const Center(
         child:
             Text('SIZE BOX', style: TextStyle(fontSize: 24))), // INACCESSIBLE

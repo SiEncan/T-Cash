@@ -1,4 +1,6 @@
 // profile.dart
+import 'package:fintar/screen/qr/generateQr.dart';
+import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -278,14 +280,14 @@ class _ProfileState extends State<Profile> {
 
   Widget _buildProfileInfo() {
     return isLoading
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           )
         : GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
@@ -307,6 +309,8 @@ class _ProfileState extends State<Profile> {
                   },
                 ),
               );
+
+              _fetchUserProfile();
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -315,15 +319,52 @@ class _ProfileState extends State<Profile> {
                   // Avatar
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: Colors.grey[300],
-                    backgroundImage: profileImageUrl.isNotEmpty
-                        ? NetworkImage(profileImageUrl)
-                        : null,
-                    child: profileImageUrl.isEmpty
-                        ? const Icon(Icons.person,
-                            size: 40, color: Colors.white)
-                        : null,
+                    backgroundColor: Colors.grey[500],
+                    child: ClipOval(
+                      child: profileImageUrl.isNotEmpty
+                          ? Image.network(
+                              profileImageUrl,
+                              fit: BoxFit.cover,
+                              width: 60,
+                              height: 60,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                    .expectedTotalBytes ??
+                                                1)
+                                        : null,
+                                    strokeWidth: 2,
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                            Colors.white),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.error,
+                                  size: 40,
+                                  color: Colors.red,
+                                );
+                              },
+                            )
+                          : const Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                    ),
                   ),
+
                   const SizedBox(width: 16), // Spasi antar avatar dan teks
                   // Informasi profil
                   Expanded(
@@ -351,26 +392,31 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   // Tombol "MY QR"
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.verified_user, size: 16, color: Colors.blue),
-                        SizedBox(width: 4), // Spasi antar ikon dan teks
-                        Text(
-                          'MY QR',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () => Navigator.of(context)
+                        .push(createRoute(UserQRCode(), 1, 0)),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.verified_user,
+                              size: 16, color: Colors.blue),
+                          SizedBox(width: 4), // Spasi antar ikon dan teks
+                          Text(
+                            'MY QR',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

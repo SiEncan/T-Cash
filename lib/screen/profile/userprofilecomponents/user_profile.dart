@@ -19,7 +19,10 @@ class _UserProfileState extends State<UserProfile> {
   String username = '';
   String mobileNumber = '';
   String email = '';
+
   bool isLoading = true;
+  bool isPicking = false;
+  bool isUploading = false;
 
   @override
   void initState() {
@@ -55,16 +58,13 @@ class _UserProfileState extends State<UserProfile> {
           .get();
 
       if (userDoc.exists) {
+        Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+
         setState(() {
-          profileImageUrl = userDoc['profileImageUrl'] ?? '';
-          username = userDoc['fullName'] ?? '';
-          mobileNumber = userDoc['phone'] ?? '';
-          email = userDoc['email'] ?? '';
-          isLoading = false;
-        });
-      } else {
-        print('User document does not exist!');
-        setState(() {
+          profileImageUrl = data?['profileImageUrl'] ?? '';
+          username = data?['fullName'] ?? '';
+          mobileNumber = data?['phone'] ?? '';
+          email = data?['email'];
           isLoading = false;
         });
       }
@@ -117,16 +117,40 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      String? imageUrl = await _uploadImageToCloudinary(File(image.path));
-      if (imageUrl != null) {
+  Future _pickImage() async {
+    if (isPicking) return;
+    setState(() {
+      isPicking = true;
+    });
+
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
         setState(() {
-          profileImageUrl = imageUrl;
+          isUploading = true;
         });
-        _updateUserProfile('profileImageUrl', imageUrl);
+
+        String? imageUrl = await _uploadImageToCloudinary(File(image.path));
+
+        if (imageUrl != null) {
+          if (mounted) {
+            setState(() {
+              profileImageUrl = imageUrl;
+            });
+          }
+          _updateUserProfile('profileImageUrl', imageUrl);
+        }
+      }
+    } catch (e) {
+      print('Error picking or uploading image: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          isPicking = false;
+          isUploading = false;
+        });
       }
     }
   }
@@ -154,10 +178,10 @@ class _UserProfileState extends State<UserProfile> {
               onPressed: () {
                 setState(() {
                   switch (field) {
-                    case 'username':
+                    case 'fullName':
                       username = controller.text;
                       break;
-                    case 'mobileNumber':
+                    case 'phone':
                       mobileNumber = controller.text;
                       break;
                     case 'email':
@@ -200,6 +224,9 @@ class _UserProfileState extends State<UserProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(
+              height: 20,
+            ),
             _buildSection([
               _buildSettingItem(
                 'Account Type',
@@ -211,17 +238,38 @@ class _UserProfileState extends State<UserProfile> {
                 'Profile Picture',
                 '',
                 showArrow: true,
-                leading: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.grey,
-                  backgroundImage: profileImageUrl.isNotEmpty
-                      ? NetworkImage(profileImageUrl)
-                      : null,
-                  child: profileImageUrl.isEmpty
-                      ? const Icon(Icons.person, size: 40, color: Colors.white)
-                      : null,
+                leading: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: profileImageUrl.isNotEmpty
+                          ? NetworkImage(profileImageUrl)
+                          : null,
+                      child: profileImageUrl.isEmpty
+                          ? const Icon(Icons.person,
+                              size: 40, color: Colors.white)
+                          : null,
+                    ),
+                    if (isUploading)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                onTap: _pickImage,
+                onTap: isPicking || isUploading ? null : _pickImage,
               ),
               _buildSettingItem(
                 'Username',
@@ -229,14 +277,14 @@ class _UserProfileState extends State<UserProfile> {
                 showArrow: true,
                 isBlue: true,
                 onTap: () =>
-                    _editProfileField('Username', username, 'username'),
+                    _editProfileField('Username', username, 'fullName'),
               ),
               _buildSettingItem(
                 'Mobile Number',
                 mobileNumber,
                 showArrow: true,
-                onTap: () => _editProfileField(
-                    'Mobile Number', mobileNumber, 'mobileNumber'),
+                onTap: () =>
+                    _editProfileField('Mobile Number', mobileNumber, 'phone'),
               ),
               _buildSettingItem(
                 'Email Address',
