@@ -358,7 +358,12 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
                           final filteredTransactions = transactions
                               .where((transaction) =>
                                   transaction['type'] == currentView)
-                              .toList();
+                              .toList()
+                            ..sort((a, b) => DateFormat('d MMM')
+                                .parse(b['date'])
+                                .compareTo(
+                                    DateFormat('d MMM').parse(a['date'])));
+
                           final transaction = filteredTransactions[index];
                           return Container(
                             margin: const EdgeInsets.symmetric(vertical: 4),
