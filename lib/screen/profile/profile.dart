@@ -112,6 +112,17 @@ class _ProfileState extends State<Profile> {
                   // Feature Grid
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -157,13 +168,25 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
                   // Income/Expense Row
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    height: 80,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         _buildTransactionItem(
                           Icons.arrow_upward,
@@ -180,7 +203,10 @@ class _ProfileState extends State<Profile> {
                             );
                           },
                         ),
-                        const SizedBox(width: 40),
+                        VerticalDivider(
+                          color: Colors.grey[400],
+                          thickness: 1,
+                        ),
                         _buildTransactionItem(
                           Icons.arrow_downward,
                           'Expense',
@@ -199,6 +225,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 12),
                   // Additional Menu Items - Box 1
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -481,6 +508,7 @@ class _ProfileState extends State<Profile> {
           ),
           const SizedBox(width: 12),
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
