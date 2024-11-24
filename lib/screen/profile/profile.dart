@@ -7,8 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/user_profile.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/balance.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/transaction_history.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/income_page.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/expense_page.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/income_expense_page.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/donation.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/promocode.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/help_center.dart';
@@ -26,9 +25,9 @@ class _ProfileState extends State<Profile> {
   String profileName = 'Loading...';
   String profilePhone = 'Loading...';
   String profileImageUrl = '';
-  String profileBalance = 'Loading..';
-  String profileIncome = 'Loading..';
-  String profileExpense = 'Loading..';
+  int profileBalance = 0;
+  int profileIncome = 0;
+  int profileExpense = 0;
   String profileUserId = '';
   bool isLoading = true;
 
@@ -40,55 +39,60 @@ class _ProfileState extends State<Profile> {
 
   Future<void> _fetchUserProfile() async {
     try {
-      // Dapatkan user ID dari Firebase Authentication
-      String? userId = FirebaseAuth.instance.currentUser?.uid;
-
-      if (userId == null) {
-        print('User ID not found');
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
         return;
       }
 
-      // Ambil data user dari Firestore
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
 
-      if (userDoc.exists) {
-        setState(() {
-          profileUserId = userId;
-          profileName = userDoc['fullName'] ?? 'No Name';
-          profilePhone = userDoc['phone'] ?? 'No Number';
-          profileImageUrl = userDoc['profileImageUrl'] ?? '';
-          profileBalance =
-              'Rp${(userDoc['saldo'] ?? 0).toString().replaceAllMapped(
-                    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-                    (Match m) => '${m[1]}.',
-                  )}'; // Format saldo
-          profileIncome =
-              'Rp${(userDoc['income'] ?? 0).toString().replaceAllMapped(
-                    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-                    (Match m) => '${m[1]}.',
-                  )}'; // Format saldo
-          profileExpense =
-              'Rp${(userDoc['expense'] ?? 0).toString().replaceAllMapped(
-                    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-                    (Match m) => '${m[1]}.',
-                  )}'; // Format saldo
-          isLoading = false;
-        });
-      } else {
-        print('User document does not exist!');
-        setState(() {
-          isLoading = false;
-        });
-      }
+      final incomeSnapshot = await userDoc
+          .collection('transactionHistory')
+          .where('type', whereIn: ['Top-Up', 'Transfer in']).get();
+
+      final totalIncome = incomeSnapshot.docs.fold<int>(
+        0,
+        (sum, doc) =>
+            sum + ((doc.data()['amount'] as num?)?.toDouble() ?? 0.0).toInt(),
+      );
+
+      final expenseSnapshot = await userDoc
+          .collection('transactionHistory')
+          .where('type', whereIn: ['Payment', 'Transfer out']).get();
+
+      final totalExpense = expenseSnapshot.docs.fold<int>(
+        0,
+        (sum, doc) =>
+            sum + ((doc.data()['amount'] as num?)?.toDouble() ?? 0.0).toInt(),
+      );
+
+      final profileSnapshot = await userDoc.get();
+      final profileData = profileSnapshot.data() as Map<String, dynamic>;
+
+      setState(() {
+        profileUserId = user.uid;
+        profileName = profileData['fullName'];
+        profilePhone = profileData['phone'];
+        profileImageUrl = profileData['profileImageUrl'] ?? '';
+        profileBalance = profileData['saldo'];
+        profileIncome = totalIncome;
+        profileExpense = totalExpense;
+        isLoading = false;
+      });
     } catch (e) {
       print('Error fetching user profile: $e');
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  String _formatCurrency(num value) {
+    return 'Rp${value.toStringAsFixed(0).replaceAllMapped(
+          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+        )}';
   }
 
   @override
@@ -114,7 +118,7 @@ class _ProfileState extends State<Profile> {
                         _buildFeatureItem(
                           Icons.account_balance,
                           'Balance',
-                          profileBalance,
+                          _formatCurrency(profileBalance),
                           () {
                             Navigator.push(
                               context,
@@ -164,13 +168,15 @@ class _ProfileState extends State<Profile> {
                         _buildTransactionItem(
                           Icons.arrow_upward,
                           'Income',
-                          profileIncome,
+                          _formatCurrency(profileIncome),
                           Colors.green,
                           () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => IncomePage()),
+                                  builder: (context) => IncomeExpensePage(
+                                      totalIncome: profileIncome,
+                                      totalExpense: profileExpense)),
                             );
                           },
                         ),
@@ -178,13 +184,15 @@ class _ProfileState extends State<Profile> {
                         _buildTransactionItem(
                           Icons.arrow_downward,
                           'Expense',
-                          profileExpense,
+                          _formatCurrency(profileExpense),
                           Colors.orange,
                           () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ExpensePage()),
+                                  builder: (context) => IncomeExpensePage(
+                                      totalIncome: profileIncome,
+                                      totalExpense: profileExpense)),
                             );
                           },
                         ),
