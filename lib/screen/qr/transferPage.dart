@@ -1,5 +1,6 @@
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:fintar/screen/auth/passcode_input.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/terms_conditions.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/services/saldo_services.dart';
@@ -7,6 +8,7 @@ import 'package:fintar/services/transaction_services.dart';
 import 'package:fintar/widgets/bottom_navigation.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +16,7 @@ import 'package:flutter/services.dart';
 class TransferPage extends StatefulWidget {
   final String uid;
 
-  TransferPage({required this.uid});
+  const TransferPage({super.key, required this.uid});
 
   @override
   _TransferPageState createState() => _TransferPageState();
@@ -28,6 +30,7 @@ class _TransferPageState extends State<TransferPage> {
 
   String targetName = '';
   String targetPhone = '';
+  String targetPhoto = '';
   int senderSaldo = 0;
   String senderName = '';
   TextEditingController amountController = TextEditingController();
@@ -93,7 +96,7 @@ class _TransferPageState extends State<TransferPage> {
                         'Send to Friend',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -123,10 +126,50 @@ class _TransferPageState extends State<TransferPage> {
                           leading: CircleAvatar(
                             radius: 28,
                             backgroundColor: Colors.grey[200],
-                            child: const Icon(Icons.person, color: Colors.grey),
+                            child: targetPhoto.isNotEmpty
+                                ? ClipOval(
+                                    child: Image.network(
+                                      targetPhoto,
+                                      width: 56,
+                                      height: 56,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Center(
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.blue),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(Icons.person,
+                                            color: Colors.grey);
+                                      },
+                                    ),
+                                  )
+                                : const Icon(Icons.person, color: Colors.grey),
                           ),
-                          title: Text(targetName),
-                          subtitle: Text(targetPhone),
+                          title: Text(
+                            targetName,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: Text(
+                            targetPhone,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
+                          ),
                         ),
 
                         const SizedBox(height: 24),
@@ -227,6 +270,47 @@ class _TransferPageState extends State<TransferPage> {
 
                         const SizedBox(height: 16),
 
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.green,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          'All your transactions are secure and fast. By continuing, you agree to the ',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12),
+                                    ),
+                                    TextSpan(
+                                      text: 'Terms and Conditions',
+                                      style: const TextStyle(
+                                          color: Colors.green, fontSize: 12),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Navigator.of(context).push(
+                                              createRoute(
+                                                  const TermsConditions(),
+                                                  0,
+                                                  1));
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
                         // Pay Button
                         ElevatedButton(
                           onPressed: _isAmountValid
@@ -273,9 +357,11 @@ class _TransferPageState extends State<TransferPage> {
           .get();
 
       if (userDoc.exists) {
+        final data = userDoc.data() as Map<String, dynamic>;
         setState(() {
-          targetName = userDoc['fullName'];
-          targetPhone = userDoc['phone'];
+          targetName = data['fullName'] ?? '';
+          targetPhone = data['phone'] ?? '';
+          targetPhoto = data['profileImageUrl'] ?? '';
         });
       } else {
         debugPrint('User not found in Firestore');
