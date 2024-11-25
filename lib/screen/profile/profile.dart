@@ -189,18 +189,17 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         _buildTransactionItem(
-                          Icons.arrow_upward,
+                          Icons.arrow_downward,
                           'Income',
                           _formatCurrency(profileIncome),
                           Colors.green,
                           () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => IncomeExpensePage(
-                                      totalIncome: profileIncome,
-                                      totalExpense: profileExpense)),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const IncomeExpensePage(),
+                                ));
                           },
                         ),
                         VerticalDivider(
@@ -208,18 +207,17 @@ class _ProfileState extends State<Profile> {
                           thickness: 1,
                         ),
                         _buildTransactionItem(
-                          Icons.arrow_downward,
+                          Icons.arrow_upward,
                           'Expense',
                           _formatCurrency(profileExpense),
                           Colors.orange,
                           () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => IncomeExpensePage(
-                                      totalIncome: profileIncome,
-                                      totalExpense: profileExpense)),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const IncomeExpensePage(),
+                                ));
                           },
                         ),
                       ],

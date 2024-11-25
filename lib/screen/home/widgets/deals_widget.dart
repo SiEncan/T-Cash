@@ -1,3 +1,4 @@
+import 'package:fintar/screen/home/screens/applezone/applezone_screen.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -165,7 +166,14 @@ class DealsAndDiscounts extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.0),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(8.0),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AppleZoneScreen()),
+                              );
+                            },
                             child: Container(
                               alignment: Alignment.center,
                               height: 38,
