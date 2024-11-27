@@ -47,24 +47,37 @@ class _ProfileState extends State<Profile> {
       final userDoc =
           FirebaseFirestore.instance.collection('users').doc(user.uid);
 
+      final startOfMonth =
+          DateTime(DateTime.now().year, DateTime.now().month, 1);
+      final endOfMonth =
+          DateTime(DateTime.now().year, DateTime.now().month, 31);
+
       final incomeSnapshot = await userDoc
           .collection('transactionHistory')
-          .where('type', whereIn: ['Top-Up', 'Transfer in']).get();
-
-      final totalIncome = incomeSnapshot.docs.fold<int>(
-        0,
-        (sum, doc) =>
-            sum + ((doc.data()['amount'] as num?)?.toDouble() ?? 0.0).toInt(),
-      );
+          .where('type', whereIn: ['Top-Up', 'Transfer in'])
+          .where('date', isGreaterThanOrEqualTo: startOfMonth)
+          .where('date', isLessThanOrEqualTo: endOfMonth)
+          .orderBy('date', descending: false)
+          .get();
 
       final expenseSnapshot = await userDoc
           .collection('transactionHistory')
-          .where('type', whereIn: ['Payment', 'Transfer out']).get();
+          .where('type', whereIn: ['Payment', 'Transfer out'])
+          .where('date', isGreaterThanOrEqualTo: startOfMonth)
+          .where('date', isLessThanOrEqualTo: endOfMonth)
+          .orderBy('date', descending: false)
+          .get();
+
+      final totalIncome = incomeSnapshot.docs.fold<int>(
+        0,
+        (sums, doc) =>
+            sums + ((doc.data()['amount'] as num).toDouble()).toInt(),
+      );
 
       final totalExpense = expenseSnapshot.docs.fold<int>(
         0,
-        (sum, doc) =>
-            sum + ((doc.data()['amount'] as num?)?.toDouble() ?? 0.0).toInt(),
+        (sums, doc) =>
+            sums + ((doc.data()['amount'] as num).toDouble()).toInt(),
       );
 
       final profileSnapshot = await userDoc.get();
@@ -81,7 +94,6 @@ class _ProfileState extends State<Profile> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error fetching user profile: $e');
       setState(() {
         isLoading = false;
       });

@@ -603,15 +603,23 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
                                             },
                                           ),
                                         ),
-                                        leftTitles: const AxisTitles(
+                                        leftTitles: AxisTitles(
                                             sideTitles: SideTitles(
                                                 showTitles: true,
-                                                reservedSize: 200,
+                                                reservedSize:
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        2,
                                                 minIncluded: false,
                                                 maxIncluded: false)),
-                                        rightTitles: const AxisTitles(
+                                        rightTitles: AxisTitles(
                                           sideTitles: SideTitles(
-                                              reservedSize: 200,
+                                              reservedSize:
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2,
                                               showTitles: true,
                                               minIncluded: false,
                                               maxIncluded: false),
