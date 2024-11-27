@@ -216,12 +216,11 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                         buttonColor: Colors.red,
                       );
                     } else {
-                      int passcode = int.parse(widget.passcode.trim());
                       await FirebaseFirestore.instance
                           .collection('users')
                           .doc(widget.userId)
                           .update({
-                        'passcode': passcode,
+                        'passcode': widget.passcode,
                       });
                       // Navigate to the next screen after successful update
                       Navigator.pushReplacement(
