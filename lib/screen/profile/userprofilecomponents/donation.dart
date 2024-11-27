@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fintar/services/auth_services.dart';
+import 'package:fintar/services/saldo_services.dart';
+import 'package:fintar/services/transaction_services.dart';
+import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Tambahkan package untuk formatting angka
 
@@ -14,136 +17,79 @@ class _DonationHubState extends State<DonationHub> {
   int _balance = 0; // Saldo default sebelum diambil dari Firebase
   final TextEditingController _donationController = TextEditingController();
   bool _isLoading = true;
+  String _userId = '';
+  final SaldoService saldoService = SaldoService();
+  final authService = AuthService();
+  final TransactionService transactionService = TransactionService();
 
   @override
   void initState() {
     super.initState();
-    _fetchBalance();
+    _fetchUserInfo();
   }
 
-  // Ambil saldo dari Firebase
-  Future<void> _fetchBalance() async {
-    try {
-      String? userId = FirebaseAuth.instance.currentUser?.uid;
-
-      if (userId == null) {
-        _showMessage('User not logged in.');
-        return;
-      }
-
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (userDoc.exists) {
-        setState(() {
-          _balance = (userDoc['saldo'] ?? 0) as int; // Pastikan tipe int
-          _isLoading = false;
-        });
-      } else {
-        _showMessage('User document does not exist.');
-      }
-    } catch (e) {
-      _showMessage('Failed to fetch balance: $e');
-    }
+  @override
+  void dispose() {
+    _donationController.clear();
+    super.dispose();
   }
 
-  // Perbarui saldo dan tambahkan ke expense
-  Future<void> _updateBalance(int donationAmount) async {
-    try {
-      String? userId = FirebaseAuth.instance.currentUser?.uid;
-
-      if (userId == null) {
-        _showMessage('User not logged in.');
-        return;
-      }
-
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot snapshot = await transaction.get(userDoc);
-
-        if (!snapshot.exists) {
-          throw Exception('User document does not exist.');
-        }
-
-        final data = snapshot.data() as Map<String, dynamic>;
-        int currentBalance = (data['saldo'] ?? 0) as int;
-        int currentExpense =
-            data['expense'] != null ? (data['expense'] as int) : 0;
-
-        if (currentBalance >= donationAmount) {
-          int newBalance = currentBalance - donationAmount;
-          int newExpense = currentExpense + donationAmount;
-
-          // Update saldo dan expense
-          transaction.update(userDoc, {
-            'saldo': newBalance,
-            'expense': newExpense,
-          });
-
-          setState(() {
-            _balance = newBalance;
-          });
-        } else {
-          throw Exception('Insufficient balance.');
-        }
-      });
-
-      // Tambahkan ke riwayat transaksi
-      await _addTransactionHistory('expense', 'Donation', donationAmount);
-
-      _showMessage('Thank you for your donation!');
-    } catch (e) {
-      _showMessage('Failed to update balance: $e');
-    }
-  }
-
-  Future<void> _addTransactionHistory(
-      String type, String description, int amount) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final userDoc =
-            FirebaseFirestore.instance.collection('users').doc(user.uid);
-        await userDoc.collection('transactions').add({
-          'type': type, // "expense" untuk donasi
-          'description': description, // "Donation"
-          'amount': amount,
-          'date': DateTime.now().toIso8601String(), // Simpan timestamp
-        });
-      }
-    } catch (e) {
-      print('Error adding transaction history: $e');
-    }
+  Future<void> _fetchUserInfo() async {
+    String userId = authService.getUserId();
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    setState(() {
+      _balance = (userDoc['saldo']);
+      _userId = userId;
+      _isLoading = false;
+    });
   }
 
   // Konfirmasi donasi
-  void _confirmDonation() {
+  Future<void> _confirmDonation() async {
     int? donationAmount = int.tryParse(_donationController.text);
 
     if (donationAmount == null || donationAmount <= 0) {
-      _showMessage('Please enter a valid amount.');
-    } else if (donationAmount > _balance) {
-      _showMessage('Insufficient balance!');
+      return showCustomDialog(
+        context: context,
+        imagePath: 'img/failed.png',
+        message: 'Please enter a valid amount.',
+        height: 100,
+        buttonColor: Colors.red,
+      );
+    }
+
+    bool isSaldoSufficient =
+        await saldoService.reduceSaldo(_userId, donationAmount);
+
+    if (isSaldoSufficient) {
+      await transactionService.saveTransaction(_userId, 'Transfer out',
+          amount: donationAmount, note: '-', partyName: 'Donation Hub');
+
+      Navigator.pop(context);
+
+      showCustomDialog(
+        context: context,
+        imagePath: 'img/success.png',
+        message:
+            'Thank you for your donation, your support means a lot and helps us make a meaningful impact!',
+        height: 100,
+        buttonColor: Colors.green,
+      );
     } else {
-      _updateBalance(donationAmount);
-      _donationController.clear();
+      Navigator.pop(context);
+
+      showCustomDialog(
+        context: context,
+        imagePath: 'img/failed.png',
+        message: 'Insufficient balance. Please top-up your account.',
+        height: 100,
+        buttonColor: Colors.red,
+      );
     }
   }
 
   // Menampilkan pesan
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final numberFormat = NumberFormat.currency(
