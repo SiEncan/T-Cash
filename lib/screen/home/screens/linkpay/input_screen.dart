@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fintar/screen/home/screens/linkpay/modal.dart';
+import 'package:fintar/widgets/transaction_details_modal.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,8 +44,7 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
     super.initState();
     _getSenderInfo();
     amountController.addListener(_validateInput);
-    phoneNumberController.addListener(
-        _validateInput); /////////////////////////////////////////////////////////////////////////////////////////////////////
+    phoneNumberController.addListener(_validateInput);
   }
 
   @override
@@ -307,13 +306,13 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
                               final amountReplaced = amountController.text
                                   .replaceAll(RegExp(r'[^0-9]'), '');
                               int amount = int.tryParse(amountReplaced) ?? 0;
-                              TransactionModal(
+                              TransactionDetailsModal(
                                       userId: _userId,
                                       customerName: customerName,
                                       serviceName:
                                           'Top-Up Saldo ${widget.service}',
                                       serviceImage: widget.serviceImage,
-                                      phoneNumber:
+                                      recipientInfo:
                                           phoneNumberController.text.trim(),
                                       amount: amount)
                                   .showCustomModal(context);

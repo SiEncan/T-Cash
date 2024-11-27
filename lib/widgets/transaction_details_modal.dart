@@ -9,25 +9,27 @@ import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class TransactionModal extends StatelessWidget {
+class TransactionDetailsModal extends StatelessWidget {
   final String userId;
   final String customerName;
   final String serviceName;
-  final String? phoneNumber;
+  final String recipientInfo;
   final String? serviceImage;
+  final IconData? icon;
   final int amount;
 
   final passcodeChecker = PasscodeChecker();
   final SaldoService saldoService = SaldoService();
   final TransactionService transactionService = TransactionService();
 
-  TransactionModal({
+  TransactionDetailsModal({
     super.key,
     required this.userId,
     required this.customerName,
     required this.serviceName,
-    this.phoneNumber,
+    required this.recipientInfo,
     this.serviceImage,
+    this.icon,
     required this.amount,
   });
 
@@ -118,7 +120,12 @@ class TransactionModal extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Phone Number',
+                              serviceName.contains('PLN')
+                                  ? 'Meter Number'
+                                  : serviceName.contains('Pulsa') ||
+                                          serviceName.contains('Top-Up')
+                                      ? 'Phone Number'
+                                      : 'ICloud E-Mail',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -126,7 +133,7 @@ class TransactionModal extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              phoneNumber!,
+                              recipientInfo,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -143,14 +150,29 @@ class TransactionModal extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            ClipOval(
-                              child: Image.asset(
-                                serviceImage!,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            (serviceName.contains('Top-Up'))
+                                ? ClipOval(
+                                    child: Image.asset(
+                                      serviceImage!,
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : (serviceName.contains('PLN'))
+                                    ? Image.asset(
+                                        serviceImage!,
+                                        width: 80,
+                                        height: 110,
+                                      )
+                                    : (serviceName.contains('Pulsa'))
+                                        ? Image.asset(
+                                            serviceImage!,
+                                            width: 120,
+                                            height: 60,
+                                          )
+                                        : Icon(icon,
+                                            color: Colors.black, size: 50),
                             const SizedBox(height: 10),
                             Text(
                               serviceName,
@@ -297,13 +319,18 @@ class TransactionModal extends StatelessWidget {
             return;
           }
 
-          if (phoneNumber?.trim() == '') {
+          if (recipientInfo.trim() == '') {
             Navigator.pop(context);
 
             return showCustomDialog(
               context: context,
               imagePath: 'img/failed.png',
-              message: 'Please fill out phone number.',
+              message: serviceName.contains('Pulsa') ||
+                      serviceName.contains('Top-Up')
+                  ? 'Please fill out phone number.'
+                  : serviceName.contains('PLN')
+                      ? 'Please fill out meter number'
+                      : 'Please fill out ICloud E-Mail.',
               height: 100,
               buttonColor: Colors.red,
             );
@@ -318,10 +345,18 @@ class TransactionModal extends StatelessWidget {
               await saldoService.reduceSaldo(userId, amount);
 
           if (isSaldoSufficient) {
-            await transactionService.saveTransaction(userId, 'Payment',
-                amount: amount,
-                description: serviceName,
-                additionalInfo: 'Nomor Tujuan: $phoneNumber');
+            await transactionService.saveTransaction(
+              userId,
+              'Payment',
+              amount: amount,
+              description: serviceName,
+              additionalInfo: serviceName.contains('Pulsa') ||
+                      serviceName.contains('Top-Up')
+                  ? 'Nomor Tujuan: $recipientInfo'
+                  : serviceName.contains('PLN')
+                      ? 'Meter Number: $recipientInfo'
+                      : 'iCloud E-Mail: $recipientInfo',
+            );
 
             Navigator.pop(context);
 

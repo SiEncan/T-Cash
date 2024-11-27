@@ -65,7 +65,9 @@ class _PayElectricityScreenState extends State<PlnScreen> {
             if (inputValid)
               Expanded(
                 child: PlnGridWidget(
-                    customerName: customerName, meterNumber: meterNumber),
+                    userId: userId,
+                    customerName: customerName,
+                    meterNumber: meterNumber),
               ),
           ],
         ),
