@@ -198,6 +198,14 @@ class _TransferPageState extends State<TransferPage> {
                             hintStyle: TextStyle(color: Colors.grey[600]),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.zero,
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1),
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 2),
+                            ),
                           ),
                           onChanged: (value) {
                             final newValue = _formatAmount(value);
@@ -440,11 +448,10 @@ class _TransferPageState extends State<TransferPage> {
         partyName: senderName,
       );
 
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const BottomNavigation(),
-        ),
+        MaterialPageRoute(builder: (context) => const BottomNavigation()),
+        (Route<dynamic> route) => false, // Menghapus seluruh stack navigasi
       );
 
       showCustomDialog(

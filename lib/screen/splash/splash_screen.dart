@@ -27,15 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (user != null) {
       // Jika pengguna sudah login, arahkan ke BottomNavigation
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const BottomNavigation()),
+        (Route<dynamic> route) => false, // Menghapus seluruh stack navigasi
       );
     } else {
       // Jika pengguna belum login, arahkan ke WelcomeScreen
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+        (Route<dynamic> route) => false, // Menghapus seluruh stack navigasi
       );
     }
   }
