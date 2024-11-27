@@ -1,3 +1,4 @@
+import 'package:fintar/screen/Transaction/transaction_screen.dart';
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:fintar/screen/profile/profile.dart';
 import 'package:fintar/screen/qr/qrScanner.dart';
@@ -23,7 +24,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     const Center(
         child:
             Text('SIZE BOX', style: TextStyle(fontSize: 24))), // INACCESSIBLE
-    const Center(child: Text('Transaction', style: TextStyle(fontSize: 24))),
+    const TransactionScreen(),
     const Profile(),
   ];
 
