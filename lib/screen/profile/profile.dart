@@ -1,6 +1,8 @@
 // profile.dart
+import 'package:fintar/screen/auth/login.dart';
 import 'package:fintar/screen/qr/generateQr.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -119,6 +121,7 @@ class _ProfileState extends State<Profile> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min, // Biarkan tinggi fleksibel
                 children: [
                   // Feature Grid
@@ -296,6 +299,56 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title:
+                                const Text("Are you sure you want to logout?"),
+                            actions: [
+                              CupertinoDialogAction(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("No",
+                                    style: TextStyle(color: Colors.blue)),
+                              ),
+                              CupertinoDialogAction(
+                                onPressed: () async {
+                                  await FirebaseAuth.instance.signOut();
+                                  // Setelah logout, navigasi ke layar login
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                },
+                                child: const Text("Yes",
+                                    style: TextStyle(color: Colors.blue)),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        side: const BorderSide(color: Colors.red, width: 1),
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      "LOGOUT",
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ),
+                  ),
+
                   const SizedBox(height: 120), // Spasi tambahan di bagian bawah
                 ],
               ),
