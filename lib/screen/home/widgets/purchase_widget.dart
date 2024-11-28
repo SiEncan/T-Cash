@@ -1,4 +1,5 @@
 import 'package:fintar/screen/home/screens/applezone/applezone_screen.dart';
+import 'package:fintar/screen/home/screens/discount_voucher/voucher_screen.dart';
 import 'package:fintar/screen/home/screens/linkpay/linkpay_screen.dart';
 import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
@@ -42,7 +43,8 @@ class PurchaseMenu extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: _featureIcon(Icons.card_giftcard, 'Voucher', Colors.blue,
                     () {
-                  // gesture
+                  Navigator.of(context)
+                      .push(createRoute(const VoucherScreen(), 2.0, 0));
                 }),
               ),
               Padding(
