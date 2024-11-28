@@ -1,7 +1,6 @@
 import 'package:fintar/widgets/transaction_details_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:fintar/screen/home/screens/pulsa/widgets/pulsa_card_widget.dart';
-import 'package:fintar/services/auth_services.dart';
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
@@ -15,8 +14,6 @@ class PulsaGrid extends StatelessWidget {
       required this.selectedProviderParam,
       required this.phoneNumber,
       required this.receiverName});
-
-  final authService = AuthService();
 
   final List<String> jumlahPulsa = [
     '5k',
@@ -116,15 +113,12 @@ class PulsaGrid extends StatelessWidget {
             hargaPulsa: _formatAmount(hargaPulsa[index]),
           ),
           onTap: () {
-            String userId = authService.getUserId();
-
             String withoutK = jumlahPulsa[index].replaceAll('k', '000');
             int value = int.parse(withoutK);
             String formattedAmount =
                 NumberFormat('#,###', 'id_ID').format(value);
 
             TransactionDetailsModal(
-                    userId: userId,
                     customerName: receiverName,
                     serviceName:
                         'Pulsa $selectedProviderParam $formattedAmount',

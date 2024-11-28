@@ -1,6 +1,7 @@
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:fintar/screen/auth/passcode_input.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/terms_conditions.dart';
+import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/services/passcode_checker.dart';
 import 'package:fintar/services/saldo_services.dart';
 import 'package:fintar/services/transaction_services.dart';
@@ -10,26 +11,27 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class TransactionDetailsModal extends StatelessWidget {
-  final String userId;
   final String customerName;
   final String serviceName;
-  final String recipientInfo;
   final String? serviceImage;
+  final String? recipientInfo;
+  final String? expiryDate;
   final IconData? icon;
   final int amount;
 
+  final authService = AuthService();
   final passcodeChecker = PasscodeChecker();
   final SaldoService saldoService = SaldoService();
   final TransactionService transactionService = TransactionService();
 
   TransactionDetailsModal({
     super.key,
-    required this.userId,
     required this.customerName,
     required this.serviceName,
-    required this.recipientInfo,
+    this.recipientInfo,
     this.serviceImage,
     this.icon,
+    this.expiryDate,
     required this.amount,
   });
 
@@ -125,7 +127,10 @@ class TransactionDetailsModal extends StatelessWidget {
                                   : serviceName.contains('Pulsa') ||
                                           serviceName.contains('Top-Up')
                                       ? 'Phone Number'
-                                      : 'ICloud E-Mail',
+                                      : (serviceName.contains('iCloud') ||
+                                              serviceName.contains('Apple'))
+                                          ? 'ICloud E-Mail'
+                                          : 'Expiry Date',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -133,7 +138,10 @@ class TransactionDetailsModal extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              recipientInfo,
+                              (expiryDate?.isNotEmpty == true
+                                      ? expiryDate
+                                      : recipientInfo) ??
+                                  '-',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -171,8 +179,18 @@ class TransactionDetailsModal extends StatelessWidget {
                                             width: 120,
                                             height: 60,
                                           )
-                                        : Icon(icon,
-                                            color: Colors.black, size: 50),
+                                        : (serviceName.contains('iCloud') ||
+                                                serviceName.contains('Apple'))
+                                            ? Icon(icon,
+                                                color: Colors.black, size: 50)
+                                            : ClipOval(
+                                                child: Image.asset(
+                                                  serviceImage!,
+                                                  width: 80,
+                                                  height: 80,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
                             const SizedBox(height: 10),
                             Text(
                               serviceName,
@@ -319,7 +337,7 @@ class TransactionDetailsModal extends StatelessWidget {
             return;
           }
 
-          if (recipientInfo.trim() == '') {
+          if (recipientInfo?.trim() == '') {
             Navigator.pop(context);
 
             return showCustomDialog(
@@ -335,6 +353,8 @@ class TransactionDetailsModal extends StatelessWidget {
               buttonColor: Colors.red,
             );
           }
+
+          String userId = authService.getUserId();
 
           bool isPasscodeTrue = await PasscodeModal.showPasscodeModal(context);
           if (!isPasscodeTrue) {

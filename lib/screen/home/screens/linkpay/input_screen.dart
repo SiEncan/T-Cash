@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fintar/widgets/transaction_details_modal.dart';
 import 'package:fintar/services/auth_services.dart';
+import 'package:fintar/widgets/transaction_details_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,10 +16,6 @@ class TransferToServiceScreen extends StatefulWidget {
 }
 
 class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
-  final authService = AuthService();
-  String customerName = '';
-  String _userId = '';
-
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   bool _isContinueEnabled = false;
@@ -42,7 +37,6 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
   @override
   void initState() {
     super.initState();
-    _getSenderInfo();
     amountController.addListener(_validateInput);
     phoneNumberController.addListener(_validateInput);
   }
@@ -67,28 +61,6 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
     setState(() {
       amountController.text = _formatAmount(amount);
     });
-  }
-
-  Future<void> _getSenderInfo() async {
-    String userId = authService.getUserId();
-
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (userDoc.exists) {
-        setState(() {
-          customerName = userDoc['fullName'];
-          _userId = userId;
-        });
-      } else {
-        debugPrint('User not found in Firestore');
-      }
-    } catch (e) {
-      debugPrint('Error fetching user info: $e');
-    }
   }
 
   @override
@@ -302,12 +274,13 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
                     const Spacer(),
                     ElevatedButton(
                       onPressed: _isContinueEnabled
-                          ? () {
+                          ? () async {
+                              String customerName =
+                                  await AuthService().getFullName();
                               final amountReplaced = amountController.text
                                   .replaceAll(RegExp(r'[^0-9]'), '');
                               int amount = int.tryParse(amountReplaced) ?? 0;
                               TransactionDetailsModal(
-                                      userId: _userId,
                                       customerName: customerName,
                                       serviceName:
                                           'Top-Up Saldo ${widget.service}',

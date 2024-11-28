@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:fintar/widgets/transaction_details_modal.dart';
@@ -22,42 +21,16 @@ class BottomSheetContent extends StatefulWidget {
 
 class BottomSheetContentState extends State<BottomSheetContent> {
   final TextEditingController _emailController = TextEditingController();
-  final authService = AuthService();
-  String customerName = '';
-  String _userId = '';
 
   @override
   void initState() {
     super.initState();
-    _getCustomerInfo();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
-  }
-
-  Future<void> _getCustomerInfo() async {
-    String userId = authService.getUserId();
-
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (userDoc.exists) {
-        setState(() {
-          customerName = userDoc['fullName'];
-          _userId = userId;
-        });
-      } else {
-        debugPrint('User not found in Firestore');
-      }
-    } catch (e) {
-      debugPrint('Error fetching user info: $e');
-    }
   }
 
   @override
@@ -108,12 +81,13 @@ class BottomSheetContentState extends State<BottomSheetContent> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String email = _emailController.text.trim();
                 if (email.isNotEmpty && email.contains('@')) {
                   Navigator.pop(context);
+
+                  String customerName = await AuthService().getFullName();
                   TransactionDetailsModal(
-                          userId: _userId,
                           customerName: customerName,
                           serviceName: widget.itemName,
                           icon: widget.icon,

@@ -7,11 +7,9 @@ import 'package:intl/intl.dart';
 class PlnGridWidget extends StatelessWidget {
   final String customerName;
   final String meterNumber;
-  final String userId;
 
   PlnGridWidget({
     super.key,
-    required this.userId,
     required this.customerName,
     required this.meterNumber,
   });
@@ -136,7 +134,6 @@ class PlnGridWidget extends StatelessWidget {
             ),
             onTap: () {
               TransactionDetailsModal(
-                      userId: userId,
                       customerName: customerName,
                       serviceName: 'Token PLN $tokenDisplay',
                       serviceImage: 'img/Logo_PLN.png',
