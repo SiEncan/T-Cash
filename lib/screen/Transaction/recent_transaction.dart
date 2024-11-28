@@ -58,7 +58,8 @@ class RecentTransaction extends StatelessWidget {
               final description = transaction['description'] as String?;
 
               // Format date
-              String formattedDate = DateFormat('E, dd MMMM yyyy').format(date);
+              String formattedDate =
+                  DateFormat('dd MMM yyyy • HH:mm').format(date);
 
               return TransactionItem(
                 title: type,
