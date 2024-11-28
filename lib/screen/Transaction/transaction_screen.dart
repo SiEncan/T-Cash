@@ -1,10 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/balance.dart';
+import 'package:fintar/screen/qr/qrScanner.dart';
+import 'package:fintar/services/auth_services.dart';
+import 'package:fintar/widgets/balance_display.dart';
 import 'package:flutter/material.dart';
 
-class TransactionScreen extends StatelessWidget {
-  const TransactionScreen({Key? key}) : super(key: key);
+class TransactionScreen extends StatefulWidget {
+  const TransactionScreen({super.key});
+
+  @override
+  State<TransactionScreen> createState() => _TransactionScreenState();
+}
+
+class _TransactionScreenState extends State<TransactionScreen> {
+  bool _isBalanceVisible = true;
 
   @override
   Widget build(BuildContext context) {
+    String userId = AuthService().getUserId();
     return Scaffold(
       backgroundColor: Colors.blue.shade700,
       body: SafeArea(
@@ -16,8 +29,7 @@ class TransactionScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Greeting & Mail Icon
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -30,16 +42,56 @@ class TransactionScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   // Static Balance
-                  Text(
-                    "Rp 37.914",
-                    style: TextStyle(
-                      fontSize: 28,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(userId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.blue),
+                            );
+                          }
+
+                          var userDoc = snapshot.data!;
+                          var balance = userDoc['saldo'] ?? 0;
+
+                          return BalanceDisplay(
+                            isVisible: _isBalanceVisible,
+                            saldo: balance,
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _isBalanceVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isBalanceVisible =
+                                !_isBalanceVisible; // Toggle saldo visibility
+                          });
+                        },
+                      ),
+                    ],
                   ),
+                  // Text(
+                  //   "Rp 37.914",
+                  //   style: TextStyle(
+                  //     fontSize: 28,
+                  //     color: Colors.white,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -48,7 +100,7 @@ class TransactionScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(24),
@@ -79,14 +131,28 @@ class TransactionScreen extends StatelessWidget {
                           label: "Scan",
                           backgroundColor: Colors.blue.shade50,
                           shadowColor: Colors.blue.shade200,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const QRScanner()),
+                            );
+                          },
                         ),
                         ActionButton(
                           icon: Icons.add,
                           label: "Top Up",
                           backgroundColor: Colors.blue.shade50,
                           shadowColor: Colors.blue.shade200,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BalancePage(
+                                        userId: userId,
+                                      )),
+                            );
+                          },
                         ),
                         ActionButton(
                           icon: Icons.send,
@@ -106,7 +172,7 @@ class TransactionScreen extends StatelessWidget {
                     ),
 
                     // Recent Transactions Section
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
@@ -169,13 +235,13 @@ class ActionButton extends StatelessWidget {
   final Color shadowColor;
 
   const ActionButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onTap,
     required this.backgroundColor,
     required this.shadowColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -193,13 +259,13 @@ class ActionButton extends StatelessWidget {
                 BoxShadow(
                   color: shadowColor,
                   blurRadius: 10,
-                  offset: Offset(0, 4),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: Icon(icon, size: 30, color: Colors.blue.shade700),
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Text(
             label,
             style: TextStyle(
@@ -221,12 +287,12 @@ class TransactionItem extends StatelessWidget {
   final Color amountColor;
 
   const TransactionItem({
-    Key? key,
+    super.key,
     required this.title,
     required this.date,
     required this.amount,
     required this.amountColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +312,7 @@ class TransactionItem extends StatelessWidget {
                   color: Colors.grey.shade800,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 date,
                 style: TextStyle(

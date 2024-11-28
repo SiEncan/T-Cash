@@ -1,7 +1,7 @@
 import 'package:fintar/services/auth_services.dart';
+import 'package:fintar/widgets/balance_display.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class BalanceDisplayWidget extends StatefulWidget {
   const BalanceDisplayWidget({super.key});
@@ -65,7 +65,7 @@ class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
                   var userDoc = snapshot.data!;
                   var balance = userDoc['saldo'] ?? 0;
 
-                  return _BalanceDisplay(
+                  return BalanceDisplay(
                     isVisible: _isBalanceVisible,
                     saldo: balance,
                   );
@@ -89,68 +89,6 @@ class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
           ),
         ],
       ),
-    );
-  }
-}
-
-String formatSaldo(int saldo) {
-  final formatter = NumberFormat('#,###');
-  return formatter.format(saldo);
-}
-
-class _BalanceDisplay extends StatelessWidget {
-  final bool isVisible;
-  final int saldo;
-
-  const _BalanceDisplay({required this.isVisible, required this.saldo});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          'Rp',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Color.fromARGB(137, 255, 255, 255),
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutBack,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: ScaleTransition(
-                  scale: Tween<double>(begin: 0.2, end: 1.0).animate(animation),
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0.2, 0),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
-                  ),
-                ),
-              );
-            },
-            child: Text(
-              isVisible
-                  ? ' ${formatSaldo(saldo)}'
-                  : ' *****', // saldo atau tanda bintang
-              key: ValueKey<bool>(isVisible),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
