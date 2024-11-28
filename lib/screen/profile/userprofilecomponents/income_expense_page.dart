@@ -87,8 +87,7 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
         final data = doc.data();
         final timestamp = data['date'] as Timestamp?;
         final date = timestamp != null
-            ? DateFormat('d MMM HH:mm')
-                .format(timestamp.toDate()) // Menambahkan waktu secara lengkap
+            ? DateFormat('d MMM').format(timestamp.toDate())
             : '';
         final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
 
@@ -99,8 +98,10 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
           'description':
               data['description'] ?? 'Transfer by ${data['partyName']}',
           'amount': amount,
-          'date': date,
-          'timestamp': timestamp,
+          'date': timestamp != null
+              ? DateFormat('d MMM yyyy • HH:mm').format(timestamp.toDate())
+              : '',
+          'timestamp': timestamp?.toDate(),
         });
       }
 
@@ -108,8 +109,7 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
         final data = doc.data();
         final timestamp = data['date'] as Timestamp?;
         final date = timestamp != null
-            ? DateFormat('d MMM HH:mm')
-                .format(timestamp.toDate()) // Menambahkan waktu secara lengkap
+            ? DateFormat('d MMM').format(timestamp.toDate())
             : '';
         final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
 
@@ -118,16 +118,14 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
         transactionData.add({
           'type': 'Expense',
           'description':
-              data['description'] ?? 'Transfer to ${data['partyName']}',
+              data['description'] ?? 'Transfer by ${data['partyName']}',
           'amount': amount,
-          'date': date,
-          'timestamp': timestamp,
+          'date': timestamp != null
+              ? DateFormat('d MMM yyyy • HH:mm').format(timestamp.toDate())
+              : '',
+          'timestamp': timestamp?.toDate(),
         });
       }
-
-      transactionData.sort((a, b) {
-        return a['timestamp'].compareTo(b['timestamp']);
-      });
 
       final allDates = {...incomeGrouped.keys, ...expenseGrouped.keys}.toList();
       allDates.sort((a, b) =>
@@ -815,30 +813,10 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
                                   .where((transaction) =>
                                       transaction['type'] == currentView)
                                   .toList()
-                                ..sort((a, b) {
-                                  final timestampA =
-                                      a['timestamp'] as Timestamp?;
-                                  final timestampB =
-                                      b['timestamp'] as Timestamp?;
-
-                                  if (timestampA == null ||
-                                      timestampB == null) {
-                                    return 0;
-                                  }
-
-                                  return timestampB.compareTo(timestampA);
-                                });
+                                ..sort((a, b) => (b['timestamp'] as DateTime)
+                                    .compareTo(a['timestamp'] as DateTime));
 
                               final transaction = filteredTransactions[index];
-                              final timestamp =
-                                  transaction['timestamp'] as Timestamp;
-
-                              // Format tanggal dan waktu
-                              final formattedDate = DateFormat('d MMM yyyy')
-                                  .format(timestamp.toDate());
-                              final formattedTime = DateFormat('HH:mm')
-                                  .format(timestamp.toDate());
-
                               return Container(
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 4, horizontal: 2),
@@ -865,8 +843,7 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  subtitle:
-                                      Text('$formattedDate  •  $formattedTime'),
+                                  subtitle: Text(transaction['date']),
                                   trailing: Text(
                                     _formatCurrency(transaction['amount']),
                                     style: TextStyle(
