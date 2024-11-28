@@ -1,4 +1,5 @@
 import 'package:fintar/screen/home/screens/applezone/applezone_screen.dart';
+import 'package:fintar/screen/home/screens/linkpay/linkpay_screen.dart';
 import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
@@ -46,9 +47,9 @@ class PurchaseMenu extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                    _featureIcon(Icons.local_movies, 'TIX ID', Colors.blue, () {
-                  // gesture
+                child: _featureIcon(Icons.wallet, 'LinkPay', Colors.blue, () {
+                  Navigator.of(context)
+                      .push(createRoute(LinkPaySelectionPage(), 2.0, 0));
                 }),
               ),
               Padding(

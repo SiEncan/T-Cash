@@ -120,10 +120,12 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                       });
 
                       // Navigate to the next screen after successful update
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const BottomNavigation()),
+                        (Route<dynamic> route) =>
+                            false, // Menghapus seluruh stack navigasi
                       );
                     }
                   }),
@@ -222,11 +224,14 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                           .update({
                         'passcode': widget.passcode,
                       });
+
                       // Navigate to the next screen after successful update
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const BottomNavigation()),
+                        (Route<dynamic> route) =>
+                            false, // Menghapus seluruh stack navigasi
                       );
                     }
                   },

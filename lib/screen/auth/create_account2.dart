@@ -161,12 +161,15 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                   });
 
                   // Navigasi ke halaman utama setelah berhasil
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen(
-                                showDialog: true,
-                              )));
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen(
+                              showDialog: true,
+                            )),
+                    (Route<dynamic> route) =>
+                        false, // Menghapus seluruh stack navigasi
+                  );
                 } on FirebaseAuthException catch (e) {
                   String errorMessage;
 

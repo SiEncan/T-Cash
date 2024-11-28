@@ -73,7 +73,7 @@ class AppleZoneScreen extends StatelessWidget {
               icon: Icons.videogame_asset,
             ),
             ProductCard(
-              itemName: 'Family Arcade Plan (1 Month)',
+              itemName: 'Apple Family Arcade Plan (1 Month)',
               description: 'Play with up to 6 family members',
               price: 23900,
               icon: Icons.videogame_asset,
