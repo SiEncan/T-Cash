@@ -1,4 +1,5 @@
 import 'package:fintar/screen/Transaction/send.dart';
+import 'package:fintar/screen/home/screens/linkpay/linkpay_screen.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/balance.dart';
 import 'package:fintar/screen/qr/qrScanner.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +57,16 @@ class QuickActionButton extends StatelessWidget {
           },
         ),
         ActionButton(
-          icon: Icons.request_page,
-          label: "Request",
+          icon: Icons.wallet,
+          label: "LinkPay",
           backgroundColor: Colors.blue.shade50,
           shadowColor: Colors.blue.shade200,
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LinkPaySelectionPage()),
+            );
+          },
         ),
       ],
     );
