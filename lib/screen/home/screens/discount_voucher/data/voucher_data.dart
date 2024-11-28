@@ -1,6 +1,6 @@
 final vouchers = [
   {
-    "title": "Hophop Voucher",
+    "title": "Hophop",
     "originalPrice": "Rp20 rb",
     "discountedPrice": 15000,
     "description": "Culinary Voucher",
