@@ -87,7 +87,8 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
         final data = doc.data();
         final timestamp = data['date'] as Timestamp?;
         final date = timestamp != null
-            ? DateFormat('d MMM').format(timestamp.toDate())
+            ? DateFormat('d MMM HH:mm')
+                .format(timestamp.toDate()) // Menambahkan waktu secara lengkap
             : '';
         final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
 
@@ -99,6 +100,7 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
               data['description'] ?? 'Transfer by ${data['partyName']}',
           'amount': amount,
           'date': date,
+          'timestamp': timestamp,
         });
       }
 
@@ -106,7 +108,8 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
         final data = doc.data();
         final timestamp = data['date'] as Timestamp?;
         final date = timestamp != null
-            ? DateFormat('d MMM').format(timestamp.toDate())
+            ? DateFormat('d MMM HH:mm')
+                .format(timestamp.toDate()) // Menambahkan waktu secara lengkap
             : '';
         final amount = (data['amount'] as num?)?.toDouble() ?? 0.0;
 
@@ -118,8 +121,13 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
               data['description'] ?? 'Transfer to ${data['partyName']}',
           'amount': amount,
           'date': date,
+          'timestamp': timestamp,
         });
       }
+
+      transactionData.sort((a, b) {
+        return a['timestamp'].compareTo(b['timestamp']);
+      });
 
       final allDates = {...incomeGrouped.keys, ...expenseGrouped.keys}.toList();
       allDates.sort((a, b) =>
@@ -807,12 +815,30 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
                                   .where((transaction) =>
                                       transaction['type'] == currentView)
                                   .toList()
-                                ..sort((a, b) => DateFormat('d MMM')
-                                    .parse(b['date'])
-                                    .compareTo(
-                                        DateFormat('d MMM').parse(a['date'])));
+                                ..sort((a, b) {
+                                  final timestampA =
+                                      a['timestamp'] as Timestamp?;
+                                  final timestampB =
+                                      b['timestamp'] as Timestamp?;
+
+                                  if (timestampA == null ||
+                                      timestampB == null) {
+                                    return 0;
+                                  }
+
+                                  return timestampB.compareTo(timestampA);
+                                });
 
                               final transaction = filteredTransactions[index];
+                              final timestamp =
+                                  transaction['timestamp'] as Timestamp;
+
+                              // Format tanggal dan waktu
+                              final formattedDate = DateFormat('d MMM yyyy')
+                                  .format(timestamp.toDate());
+                              final formattedTime = DateFormat('HH:mm')
+                                  .format(timestamp.toDate());
+
                               return Container(
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 4, horizontal: 2),
@@ -840,7 +866,7 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   subtitle:
-                                      Text('Date: ${transaction['date']}'),
+                                      Text('$formattedDate  •  $formattedTime'),
                                   trailing: Text(
                                     _formatCurrency(transaction['amount']),
                                     style: TextStyle(
