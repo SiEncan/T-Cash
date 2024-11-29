@@ -9,6 +9,7 @@ import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class TransactionDetailsModal extends StatelessWidget {
   final String customerName;
@@ -45,6 +46,13 @@ class TransactionDetailsModal extends StatelessWidget {
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (Match m) => '${m[1]}.',
         )}';
+  }
+
+  String generateVoucherId() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    Random random = Random();
+    return List.generate(
+        12, (index) => characters[random.nextInt(characters.length)]).join();
   }
 
   @override
@@ -365,6 +373,10 @@ class TransactionDetailsModal extends StatelessWidget {
               await saldoService.reduceSaldo(userId, amount);
 
           if (isSaldoSufficient) {
+            String voucherId = '';
+            if (serviceName.contains('Voucher')) {
+              voucherId = generateVoucherId();
+            }
             await transactionService.saveTransaction(
               userId,
               'Payment',
@@ -375,7 +387,9 @@ class TransactionDetailsModal extends StatelessWidget {
                   ? 'Nomor Tujuan: $recipientInfo'
                   : serviceName.contains('PLN')
                       ? 'Meter Number: $recipientInfo'
-                      : 'iCloud E-Mail: $recipientInfo',
+                      : serviceName.contains('Voucher')
+                          ? 'Voucher ID: $voucherId'
+                          : 'iCloud E-Mail: $recipientInfo',
             );
 
             Navigator.pop(context);
