@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fintar/screen/history/transaction_detail.dart';
 import 'package:fintar/services/auth_services.dart';
+import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,19 +13,6 @@ class HistoryPage extends StatefulWidget {
 }
 
 class HistoryPageState extends State<HistoryPage> {
-  // Sample data
-  final List<Transaction> transactions = [
-    Transaction('Transfer', 'John Doe', 50000, '11 Nov 2024', 'Sent'),
-    Transaction('Payment', 'Uber Eats', 12000, '10 Nov 2024', 'Paid'),
-    Transaction('Top-up', 'DANA', 100000, '09 Nov 2024', 'Received'),
-    Transaction('Purchase', 'Shopee', 25000, '08 Nov 2024', 'Paid'),
-    Transaction('Purchase', 'Shopee', 25000, '08 Nov 2024', 'Paid'),
-    Transaction('Purchase', 'Shopee', 25000, '08 Nov 2024', 'Paid'),
-    Transaction('Purchase', 'Shopee', 25000, '08 Nov 2024', 'Paid'),
-    Transaction('Purchase', 'Shopee', 25000, '08 Nov 2024', 'Paid'),
-    Transaction('Purchase', 'Shopee', 25000, '08 Nov 2024', 'Paid'),
-  ];
-
   String _selectedFilter = 'All'; // Default filter selected
 
   String _formatAmount(dynamic amount) {
@@ -105,7 +94,10 @@ class HistoryPageState extends State<HistoryPage> {
                   }
 
                   final transactions = snapshot.data!.docs.map((doc) {
-                    return doc.data() as Map<String, dynamic>;
+                    return {
+                      ...doc.data() as Map<String, dynamic>,
+                      'id': doc.id,
+                    };
                   }).toList();
 
                   final filteredTransactions =
@@ -188,11 +180,19 @@ class HistoryPageState extends State<HistoryPage> {
                               final date =
                                   (transaction['date'] as Timestamp).toDate();
                               final type = transaction['type'] as String;
+
+                              final additionalInfo =
+                                  transaction['additionalInfo'] as String?;
                               final description =
                                   transaction['description'] as String?;
+                              final partyName =
+                                  transaction['partyName'] as String?;
+                              final note = transaction['note'] as String?;
 
                               return TransactionItem(
-                                title: (type.contains('Pay') &&
+                                transactionId: transaction['id'],
+                                type: type,
+                                titleDisplay: (type.contains('Pay') &&
                                         description != null)
                                     ? description
                                     : type,
@@ -204,13 +204,16 @@ class HistoryPageState extends State<HistoryPage> {
                                             ? Icons.add_circle
                                             : Icons.arrow_downward,
                                 iconColor: Colors.blue,
-                                detail: description,
                                 date: DateFormat('dd MMM yyyy • HH:mm')
                                     .format(date),
                                 amount: (type == 'Transfer out') ||
                                         (type == 'Payment')
                                     ? '-${_formatAmount(amount)}'
                                     : '+${_formatAmount(amount)}',
+                                description: description,
+                                partyName: partyName,
+                                note: note,
+                                additionalInfo: additionalInfo,
                               );
                             }),
                           ],
@@ -225,85 +228,110 @@ class HistoryPageState extends State<HistoryPage> {
 }
 
 class TransactionItem extends StatelessWidget {
-  final String title;
+  final String transactionId;
+  final String type;
+  final String titleDisplay;
   final IconData icon;
   final Color iconColor;
   final String date;
   final String amount;
-  final String? detail;
+  final String? additionalInfo;
+  final String? description;
+  final String? partyName;
+  final String? note;
 
   const TransactionItem({
     super.key,
-    required this.title,
+    required this.transactionId,
+    required this.type,
+    required this.titleDisplay,
     required this.icon,
     required this.iconColor,
     required this.date,
     required this.amount,
-    this.detail,
+    this.additionalInfo,
+    this.description,
+    this.partyName,
+    this.note,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[500]!, width: 0.7),
-                ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600),
+    return InkWell(
+      onTap: () async {
+        String fullName = await AuthService().getFullName();
+
+        Navigator.of(context).push(createRoute(
+            DetailScreen(
+                transactionId: transactionId,
+                fullName: fullName,
+                type: type,
+                date: date,
+                amount: amount,
+                additionalInfo: additionalInfo,
+                description: description,
+                partyName: partyName,
+                note: note),
+            0,
+            1));
+      },
+      splashColor: Colors.grey.withOpacity(0.3),
+      highlightColor: Colors.grey.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(8),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[500]!, width: 0.7),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    date,
-                    style: TextStyle(color: Colors.grey[700]),
-                  )
-                ],
-              ),
-              const Spacer(),
-              Text(
-                amount,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-              )
-            ],
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        titleDisplay,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        date,
+                        style: TextStyle(color: Colors.grey[700]),
+                      )
+                    ],
+                  ),
+                ),
+                Text(
+                  amount,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+              ],
+            ),
           ),
-        ),
-        Divider(
-          color: Colors.grey[300],
-          thickness: 1.5,
-          indent: 16,
-          endIndent: 16,
-        ),
-      ],
+          Divider(
+            color: Colors.grey[300],
+            thickness: 1.5,
+            indent: 16,
+            endIndent: 16,
+          ),
+        ],
+      ),
     );
   }
-}
-
-class Transaction {
-  final String type;
-  final String description;
-  final double amount;
-  final String date;
-  final String status;
-
-  Transaction(this.type, this.description, this.amount, this.date, this.status);
 }
