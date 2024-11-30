@@ -112,7 +112,10 @@ class _DonationHubState extends State<DonationHub> {
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ))
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

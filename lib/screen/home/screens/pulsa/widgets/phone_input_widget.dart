@@ -81,7 +81,10 @@ class PhoneNumberInputState extends State<PhoneNumberInput> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return const CircularProgressIndicator();
+                          return const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                          );
                         }
 
                         var userDoc = snapshot.data!.docs.isNotEmpty
@@ -137,7 +140,10 @@ class PhoneNumberInputState extends State<PhoneNumberInput> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                          return const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                          );
                         }
 
                         if (snapshot.hasError) {

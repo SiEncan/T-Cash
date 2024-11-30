@@ -166,7 +166,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             const SizedBox(height: 24),
             Center(
               child: _isLoading
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    )
                   : ElevatedButton(
                       onPressed: _changePassword,
                       style: ElevatedButton.styleFrom(

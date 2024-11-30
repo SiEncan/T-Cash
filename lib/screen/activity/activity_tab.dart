@@ -277,7 +277,9 @@ class ActivityTabState extends State<ActivityTab> {
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.all(16),
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              ),
             ),
         ],
       ),

@@ -143,7 +143,10 @@ class QRScannerState extends State<QRScanner> {
                       child: const Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircularProgressIndicator(),
+                          CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                          ),
                           SizedBox(height: 8),
                           Text(
                             'Validating QR Code...',

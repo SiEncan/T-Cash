@@ -38,7 +38,6 @@ class _UserProfileState extends State<UserProfile> {
       });
       _fetchUserProfile();
     } else {
-      print('No user logged in!');
       setState(() {
         isLoading = false;
       });
@@ -47,7 +46,6 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<void> _fetchUserProfile() async {
     if (userId.isEmpty) {
-      print('UserId is empty!');
       return;
     }
 
@@ -69,7 +67,6 @@ class _UserProfileState extends State<UserProfile> {
         });
       }
     } catch (e) {
-      print('Error fetching user profile: $e');
       setState(() {
         isLoading = false;
       });
@@ -84,9 +81,8 @@ class _UserProfileState extends State<UserProfile> {
           .collection('users')
           .doc(userId)
           .update({field: value});
-      print('$field updated successfully!');
     } catch (e) {
-      print('Error updating $field: $e');
+      debugPrint('$e');
     }
   }
 
@@ -111,8 +107,6 @@ class _UserProfileState extends State<UserProfile> {
       final jsonResponse = jsonDecode(responseData);
       return jsonResponse['secure_url'];
     } else {
-      print('Failed to upload image: ${response.statusCode}');
-      print(await response.stream.bytesToString());
       return null;
     }
   }
@@ -144,7 +138,7 @@ class _UserProfileState extends State<UserProfile> {
         }
       }
     } catch (e) {
-      print('Error picking or uploading image: $e');
+      debugPrint('Error picking or uploading image: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -204,7 +198,10 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(
+            child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+        )),
       );
     }
 

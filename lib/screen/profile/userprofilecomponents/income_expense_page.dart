@@ -204,7 +204,10 @@ class _IncomeExpensePageState extends State<IncomeExpensePage> {
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ))
           : Column(
               children: [
                 // Graph

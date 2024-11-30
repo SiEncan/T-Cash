@@ -13,7 +13,6 @@ class BalanceDisplayWidget extends StatefulWidget {
 class _BalanceDisplayWidgetState extends State<BalanceDisplayWidget> {
   bool _isBalanceVisible = true; // Inisialisasi dengan default false
   int saldo = 0;
-  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {

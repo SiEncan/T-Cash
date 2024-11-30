@@ -1,4 +1,5 @@
 // profile.dart
+import 'package:fintar/screen/activity/activity_tab.dart';
 import 'package:fintar/screen/auth/login.dart';
 import 'package:fintar/screen/qr/generateQr.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
@@ -8,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/user_profile.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/balance.dart';
-import 'package:fintar/screen/profile/userprofilecomponents/transaction_history.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/income_expense_page.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/donation.dart';
 import 'package:fintar/screen/profile/userprofilecomponents/promocode.dart';
@@ -96,9 +96,11 @@ class _ProfileState extends State<Profile> {
         isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -146,12 +148,8 @@ class _ProfileState extends State<Profile> {
                           'Balance',
                           _formatCurrency(profileBalance),
                           () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      BalancePage(userId: profileUserId)),
-                            );
+                            Navigator.of(context).push(createRoute(
+                                BalancePage(userId: profileUserId), 2, 0));
                           },
                         ),
                         _buildFeatureItem(
@@ -159,12 +157,8 @@ class _ProfileState extends State<Profile> {
                           'Transaction History',
                           'All Transactions',
                           () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TransactionHistory(),
-                              ),
-                            );
+                            Navigator.of(context)
+                                .push(createRoute(const ActivityTab(), 0, 1));
                           },
                         ),
                         _buildFeatureItem(
@@ -172,12 +166,8 @@ class _ProfileState extends State<Profile> {
                           'Donation Hub',
                           'Support system',
                           () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DonationHub(),
-                              ),
-                            );
+                            Navigator.of(context)
+                                .push(createRoute(const DonationHub(), 2, 0));
                           },
                         ),
                       ],
@@ -252,7 +242,7 @@ class _ProfileState extends State<Profile> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PromoCodePage()),
+                                builder: (context) => const PromoCodePage()),
                           );
                         }),
                       ],
@@ -272,28 +262,28 @@ class _ProfileState extends State<Profile> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserProfile()),
+                                builder: (context) => const UserProfile()),
                           );
                         }),
                         _buildMenuItem('Help Center', '', () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HelpCenter()),
+                                builder: (context) => const HelpCenter()),
                           );
                         }),
                         _buildMenuItem('Terms & Conditions', '', () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TermsConditions()),
+                                builder: (context) => const TermsConditions()),
                           );
                         }),
                         _buildMenuItem('Privacy Notice', '', () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PrivacyNotice()),
+                                builder: (context) => const PrivacyNotice()),
                           );
                         }),
                       ],
