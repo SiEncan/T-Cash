@@ -133,7 +133,8 @@ class TransactionDetailsModal extends StatelessWidget {
                               serviceName.contains('PLN')
                                   ? 'Meter Number'
                                   : serviceName.contains('Pulsa') ||
-                                          serviceName.contains('Top-Up')
+                                          serviceName.contains('Top-Up') ||
+                                          serviceName.contains('Kuota')
                                       ? 'Phone Number'
                                       : (serviceName.contains('iCloud') ||
                                               serviceName.contains('Apple'))
@@ -181,24 +182,44 @@ class TransactionDetailsModal extends StatelessWidget {
                                         width: 80,
                                         height: 110,
                                       )
-                                    : (serviceName.contains('Pulsa'))
-                                        ? Image.asset(
-                                            serviceImage!,
-                                            width: 120,
-                                            height: 60,
-                                          )
-                                        : (serviceName.contains('iCloud') ||
-                                                serviceName.contains('Apple'))
-                                            ? Icon(icon,
-                                                color: Colors.black, size: 50)
-                                            : ClipOval(
-                                                child: Image.asset(
-                                                  serviceImage!,
-                                                  width: 80,
-                                                  height: 80,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
+                                    : (serviceName.contains('Free Fire'))
+                                        ? Image.asset(serviceImage!,
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover)
+                                        : (serviceName.contains('Mobile'))
+                                            ? Image.asset(
+                                                serviceImage!,
+                                                width: 160,
+                                                height: 100,
+                                              )
+                                            : (serviceName.contains('Pulsa'))
+                                                ? Image.asset(
+                                                    serviceImage!,
+                                                    width: 120,
+                                                    height: 60,
+                                                  )
+                                                : (serviceName
+                                                        .contains('Kuota'))
+                                                    ? Icon(icon,
+                                                        color: Colors.red,
+                                                        size: 50)
+                                                    : (serviceName.contains(
+                                                                'iCloud') ||
+                                                            serviceName
+                                                                .contains(
+                                                                    'Apple'))
+                                                        ? Icon(icon,
+                                                            color: Colors.black,
+                                                            size: 50)
+                                                        : ClipOval(
+                                                            child: Image.asset(
+                                                              serviceImage!,
+                                                              width: 80,
+                                                              height: 80,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
                             const SizedBox(height: 10),
                             Text(
                               serviceName,
@@ -383,7 +404,8 @@ class TransactionDetailsModal extends StatelessWidget {
               amount: amount,
               description: serviceName,
               additionalInfo: serviceName.contains('Pulsa') ||
-                      serviceName.contains('Top-Up')
+                      serviceName.contains('Top-Up') ||
+                      serviceName.contains('Kuota')
                   ? 'Nomor Tujuan: $recipientInfo'
                   : serviceName.contains('PLN')
                       ? 'Meter Number: $recipientInfo'
