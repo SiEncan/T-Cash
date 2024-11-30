@@ -1,3 +1,4 @@
+import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,7 @@ class _UserProfileState extends State<UserProfile> {
   String username = '';
   String mobileNumber = '';
   String email = '';
+  bool passcodeExists = false;
 
   bool isLoading = true;
   bool isPicking = false;
@@ -63,6 +65,7 @@ class _UserProfileState extends State<UserProfile> {
           username = data?['fullName'] ?? '';
           mobileNumber = data?['phone'] ?? '';
           email = data?['email'];
+          passcodeExists = data?['passcode'] != null;
           isLoading = false;
         });
       }
@@ -221,6 +224,7 @@ class _UserProfileState extends State<UserProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            if (!passcodeExists) _buildSetupPasscodeItem(),
             const SizedBox(
               height: 20,
             ),
@@ -292,6 +296,49 @@ class _UserProfileState extends State<UserProfile> {
             ]),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSetupPasscodeItem() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        leading: const Icon(
+          Icons.warning,
+          color: Colors.white,
+          size: 28,
+        ),
+        title: const Text(
+          'Set up your passcode',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.chevron_right,
+          color: Colors.white,
+        ),
+        onTap: () {
+          // Navigate to the CreatePasscode screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePasscode()),
+          );
+        },
       ),
     );
   }
