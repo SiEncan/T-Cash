@@ -84,9 +84,11 @@ class ActivityTabState extends State<ActivityTab> {
       debugPrint("Error fetching transactions: $e");
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   String _formatAmount(dynamic amount) {
