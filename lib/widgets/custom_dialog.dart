@@ -6,6 +6,7 @@ void showCustomDialog({
   required String message,
   required double height,
   required Color buttonColor,
+  Null Function()? onPressed,
 }) {
   showGeneralDialog(
     context: context,
@@ -49,7 +50,11 @@ void showCustomDialog({
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    if (onPressed != null) {
+                      onPressed();
+                    } else {
+                      Navigator.of(context).pop();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttonColor,

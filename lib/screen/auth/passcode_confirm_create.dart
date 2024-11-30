@@ -122,12 +122,22 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                       });
 
                       // Navigate to the next screen after successful update
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const BottomNavigation()),
-                        (Route<dynamic> route) =>
-                            false, // Menghapus seluruh stack navigasi
+                      showCustomDialog(
+                        context: context,
+                        imagePath: 'img/success.png',
+                        message:
+                            'Passcode successfully created!\nYou can make transaction now.',
+                        height: 100,
+                        buttonColor: Colors.green,
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BottomNavigation()),
+                            (Route<dynamic> route) =>
+                                false, // Menghapus seluruh stack navigasi
+                          );
+                        },
                       );
                     }
                   }),
@@ -234,12 +244,22 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                       });
 
                       // Navigate to the next screen after successful update
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const BottomNavigation()),
-                        (Route<dynamic> route) =>
-                            false, // Menghapus seluruh stack navigasi
+                      showCustomDialog(
+                        context: context,
+                        imagePath: 'img/success.png',
+                        message:
+                            'Passcode successfully created!\nYou can make transaction now.',
+                        height: 100,
+                        buttonColor: Colors.green,
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BottomNavigation()),
+                            (Route<dynamic> route) =>
+                                false, // Menghapus seluruh stack navigasi
+                          );
+                        },
                       );
                     }
                   },

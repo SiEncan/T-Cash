@@ -1,3 +1,4 @@
+import 'package:fintar/screen/auth/enter_curr_passcode.dart';
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -293,9 +294,55 @@ class _UserProfileState extends State<UserProfile> {
                 showArrow: true,
                 onTap: () => _editProfileField('Email Address', email, 'email'),
               ),
+              if (passcodeExists) _buildPasscodeSection()
             ]),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPasscodeSection() {
+    return
+        // Change passcode option
+        Container(
+      margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.3),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        leading: const Icon(
+          Icons.lock,
+          color: Colors.white,
+          size: 28,
+        ),
+        title: const Text(
+          'Change Passcode',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.chevron_right,
+          color: Colors.white,
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EnterCurrentPasscode(userId: userId)),
+          );
+        },
       ),
     );
   }
