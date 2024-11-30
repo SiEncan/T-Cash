@@ -199,7 +199,7 @@ class RecentFeeds extends StatelessWidget {
                                                           ),
                                                           TextSpan(
                                                             text:
-                                                                " by $description",
+                                                                " via $description",
                                                             style: const TextStyle(
                                                                 fontSize: 12,
                                                                 fontWeight:

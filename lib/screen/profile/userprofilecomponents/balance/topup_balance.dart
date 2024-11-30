@@ -158,7 +158,7 @@ class TopUpBalanceState extends State<TopUpBalance> {
                         widget.userId,
                         'Top-Up',
                         amount: _selectedAmount,
-                        description: 'Virtual Account',
+                        description: 'BCA Virtual Account',
                       );
                       Navigator.pop(context);
 

@@ -162,58 +162,68 @@ class _DetailScreenState extends State<DetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: widget.type.contains('Transfer')
-                      ? Image.asset(
-                          'img/logo_transparent.png',
-                          width: 128,
-                          height: 128,
-                          color: Colors.blue,
-                        )
-                      : (widget.description?.isNotEmpty == true &&
-                              widget.description!.contains('Tokopedia'))
-                          ? Image.asset(
-                              'img/tokopedia_logo.png',
-                              width: 128,
-                              height: 128,
-                            )
-                          : (widget.description?.isNotEmpty == true &&
-                                  widget.description!.contains('GoPay'))
-                              ? ClipOval(
-                                  child: Image.asset(
-                                    'img/gopay_logo.png',
-                                    width: 128,
-                                    height: 128,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : (widget.description?.isNotEmpty == true &&
-                                      widget.description!.contains('PLN'))
-                                  ? Image.asset(
-                                      'img/Logo_PLN.png',
-                                      width: 128,
-                                      height: 128,
-                                    )
-                                  : Icon(
-                                      (widget.description?.isNotEmpty == true &&
-                                              widget.description!
-                                                  .contains('Apple'))
-                                          ? Icons.apple
-                                          : (widget.description?.isNotEmpty ==
-                                                      true &&
-                                                  widget.description!
-                                                      .contains('Pulsa'))
-                                              ? Icons.phone_android
-                                              : (widget.type.contains('Top'))
-                                                  ? Icons.add_circle
-                                                  : Icons.shopping_cart,
-                                      color: (widget.description?.isNotEmpty ==
-                                                  true &&
-                                              widget.description!
-                                                  .contains('Apple'))
-                                          ? Colors.black
-                                          : Colors.blue,
-                                      size: 128,
-                                    ),
+                  child: () {
+                    final description = widget.description ?? '';
+                    final assetMap = {
+                      'Tokopedia': 'img/tokopedia_logo.png',
+                      'Shopee': 'img/shopeepay_logo.png',
+                      'OVO': 'img/ovo_logo.png',
+                      'GoPay': 'img/gopay_logo.png',
+                      'PLN': 'img/Logo_PLN.png',
+                      'Hophop': 'img/hophop.png',
+                      'Dokki': 'img/dookki.png',
+                      'Starbuck': 'img/starbucks.png',
+                      'Kenangan': 'img/kopikenangan.png',
+                      'KFC': 'img/kfc.png',
+                      'Lazada': 'img/lazada.png',
+                      'blibli': 'img/blibli.png',
+                      'Tiket': 'img/tiket.png',
+                      'Traveloka': 'img/traveloka.png',
+                    };
+
+                    for (final entry in assetMap.entries) {
+                      if (description.contains(entry.key)) {
+                        final isOval = [
+                          'PLN',
+                        ].contains(entry.key);
+                        return isOval
+                            ? Image.asset(
+                                entry.value,
+                                width: 128,
+                                height: 128,
+                              )
+                            : ClipOval(
+                                child: Image.asset(
+                                  entry.value,
+                                  width: 128,
+                                  height: 128,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                      }
+                    }
+
+                    return widget.type.contains('Transfer')
+                        ? Image.asset(
+                            'img/logo_transparent.png',
+                            width: 128,
+                            height: 128,
+                            color: Colors.blue,
+                          )
+                        : Icon(
+                            description.contains('Apple')
+                                ? Icons.apple
+                                : description.contains('Pulsa')
+                                    ? Icons.phone_android
+                                    : widget.type.contains('Top')
+                                        ? Icons.add_circle
+                                        : Icons.shopping_cart,
+                            color: description.contains('Apple')
+                                ? Colors.black
+                                : Colors.blue,
+                            size: 128,
+                          );
+                  }(),
                 ),
                 const SizedBox(height: 32),
                 Row(
@@ -246,13 +256,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  (widget.description?.isNotEmpty == true)
-                      ? widget.description!
-                      : (widget.type.contains('in'))
-                          ? 'Receive Money from ${widget.partyName!.toUpperCase()}'
-                          : (widget.type.contains('out'))
-                              ? 'Send Money to ${widget.partyName!.toUpperCase()}'
-                              : '-',
+                  (widget.type.contains('Top'))
+                      ? widget.type
+                      : (widget.description?.isNotEmpty == true)
+                          ? widget.description!
+                          : (widget.type.contains('in'))
+                              ? 'Receive Money from ${widget.partyName!.toUpperCase()}'
+                              : (widget.type.contains('out'))
+                                  ? 'Send Money to ${widget.partyName!.toUpperCase()}'
+                                  : '-',
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 15),
                 ),
@@ -273,9 +285,12 @@ class _DetailScreenState extends State<DetailScreen> {
                       borderRadius: BorderRadius.circular(8)),
                   child: Row(
                     children: [
-                      const Text(
-                        'Total Payment',
-                        style: TextStyle(
+                      Text(
+                        (widget.type.contains('Top') ||
+                                widget.type.contains('in'))
+                            ? 'Total Received'
+                            : 'Total Payment',
+                        style: const TextStyle(
                             fontWeight: FontWeight.w700, fontSize: 16),
                       ),
                       const Spacer(),
@@ -288,15 +303,18 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Row(
+                Row(
                   children: [
-                    Text(
+                    const Text(
                       'Payment method',
                       style: TextStyle(fontWeight: FontWeight.w400),
                     ),
-                    Spacer(),
-                    Text('T-CASH Balance',
-                        style: TextStyle(fontWeight: FontWeight.w400))
+                    const Spacer(),
+                    (widget.type.contains('Top'))
+                        ? Text(widget.description!,
+                            style: const TextStyle(fontWeight: FontWeight.w400))
+                        : const Text('T-CASH Balance',
+                            style: TextStyle(fontWeight: FontWeight.w400))
                   ],
                 ),
                 Column(
@@ -411,9 +429,10 @@ class _DetailScreenState extends State<DetailScreen> {
                                 showVoucherPopup(context, widget.description,
                                     widget.additionalInfo);
                               },
+                              // ignore: deprecated_member_use
                               child: const PrettyQr(
                                 size: 100,
-                                data: 'Kopi Kenangan',
+                                data: 'Voucher',
                                 errorCorrectLevel: QrErrorCorrectLevel.H,
                                 roundEdges: true,
                                 elementColor: Colors.black,
