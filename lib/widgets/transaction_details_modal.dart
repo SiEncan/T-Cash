@@ -139,7 +139,12 @@ class TransactionDetailsModal extends StatelessWidget {
                                       : (serviceName.contains('iCloud') ||
                                               serviceName.contains('Apple'))
                                           ? 'ICloud E-Mail'
-                                          : 'Expiry Date',
+                                          : (serviceName.contains(
+                                                      'Mobile Legend') ||
+                                                  serviceName
+                                                      .contains('Free Fire'))
+                                              ? 'User ID and Server ID'
+                                              : 'Expiry Date',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -411,7 +416,10 @@ class TransactionDetailsModal extends StatelessWidget {
                       ? 'Meter Number: $recipientInfo'
                       : serviceName.contains('Voucher')
                           ? 'Voucher ID: $voucherId'
-                          : 'iCloud E-Mail: $recipientInfo',
+                          : serviceName.contains('Mobile Legends') ||
+                                  serviceName.contains('Free Fire')
+                              ? 'User ID and Server ID : $recipientInfo'
+                              : 'iCloud E-Mail: $recipientInfo',
             );
 
             Navigator.pop(context);

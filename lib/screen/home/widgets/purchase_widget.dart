@@ -1,5 +1,6 @@
 import 'package:fintar/screen/home/screens/applezone/applezone_screen.dart';
 import 'package:fintar/screen/home/screens/discount_voucher/voucher_screen.dart';
+import 'package:fintar/screen/home/screens/game/game_screen.dart';
 import 'package:fintar/screen/home/screens/kuota/kuota_screen.dart';
 import 'package:fintar/screen/home/screens/linkpay/linkpay_screen.dart';
 import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
@@ -83,8 +84,9 @@ class PurchaseMenu extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: _featureIcon(Icons.receipt, 'Pajak', Colors.blue, () {
-                  // gesture
+                child: _featureIcon(Icons.gamepad, 'Game', Colors.blue, () {
+                  Navigator.of(context)
+                      .push(createRoute(const GameScreen(), 2.0, 0));
                 }),
               ),
               Padding(
