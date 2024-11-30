@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fintar/screen/history/transaction_detail.dart';
+import 'package:fintar/screen/activity/transaction_detail.dart';
 import 'package:fintar/services/auth_services.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+class ActivityTab extends StatefulWidget {
+  const ActivityTab({super.key});
 
   @override
-  HistoryPageState createState() => HistoryPageState();
+  ActivityTabState createState() => ActivityTabState();
 }
 
-class HistoryPageState extends State<HistoryPage> {
+class ActivityTabState extends State<ActivityTab> {
   String _selectedFilter = 'All'; // Default filter selected
 
   String _formatAmount(dynamic amount) {
@@ -39,6 +39,7 @@ class HistoryPageState extends State<HistoryPage> {
               style: TextStyle(color: Colors.white),
             ),
           ),
+          iconTheme: const IconThemeData(color: Colors.white),
           actions: [
             IconButton(
               icon: const Icon(Icons.filter_alt, color: Colors.white),

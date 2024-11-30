@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fintar/screen/activity/activity_tab.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
@@ -262,7 +263,7 @@ class RecentFeeds extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context)
-                        .push(createRoute(const PulsaScreen(), 0, 1.0));
+                        .push(createRoute(const ActivityTab(), 0, 1.0));
                   },
                   child: const Text(
                     "View All",

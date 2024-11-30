@@ -154,7 +154,8 @@ class _DetailScreenState extends State<DetailScreen> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+            padding:
+                const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(8)),
             child: Column(
@@ -426,26 +427,29 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ],
                 const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(createRoute(const HelpCenter(), 0, 1));
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const Center(
-                        child: Text(
-                      'NEED SOME HELP?',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    )),
+                Material(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    splashColor: Colors.blue.withOpacity(0.2),
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(createRoute(const HelpCenter(), 0, 1));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: const Center(
+                          child: Text(
+                        'NEED SOME HELP?',
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      )),
+                    ),
                   ),
                 )
               ],
