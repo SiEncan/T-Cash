@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fintar/screen/profile/userprofilecomponents/terms_conditions.dart';
 import 'package:fintar/widgets/bottom_navigation.dart';
 import 'package:fintar/widgets/custom_dialog.dart';
+import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:simple_numpad/simple_numpad.dart';
@@ -180,19 +182,25 @@ class CreatePasscodeConfirmState extends State<CreatePasscodeConfirm> {
                 ),
               ),
               const Spacer(),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "By continuing, you accept to our ",
                     style: TextStyle(
                         color: Colors.black38,
                         fontSize: 12,
                         fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "Terms of Use",
-                    style: TextStyle(color: Colors.blueAccent, fontSize: 14),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(createRoute(const TermsConditions(), 0, 1));
+                    },
+                    child: const Text(
+                      "Terms of Use",
+                      style: TextStyle(color: Colors.blueAccent, fontSize: 14),
+                    ),
                   ),
                 ],
               ),

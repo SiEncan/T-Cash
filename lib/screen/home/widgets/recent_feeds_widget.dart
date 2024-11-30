@@ -46,7 +46,14 @@ class RecentFeeds extends StatelessWidget {
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No recent transactions.'));
+          return Center(
+            child: Text(
+              'No recent activity',
+              style: TextStyle(
+                color: Colors.grey[800],
+              ),
+            ),
+          );
         }
 
         final transactions = snapshot.data!.docs;

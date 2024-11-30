@@ -178,100 +178,117 @@ class ActivityTabState extends State<ActivityTab> {
 
           // ListView untuk transaksi
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.only(bottom: 128),
-              controller: _scrollController,
-              children: groupedTransactions.entries.map((entry) {
-                final month = entry.key;
-                final transactions = entry.value;
-
-                final now = DateTime.now();
-                final currentMonth = DateFormat('MMMM yyyy').format(now);
-                final displayMonth =
-                    (month == currentMonth) ? 'This Month' : month;
-
-                // Hitung total transaksi untuk bulan ini
-                int totalReceived = 0;
-                int totalSentPayment = 0;
-
-                for (var transaction in transactions) {
-                  final amount = transaction['amount'] as int;
-                  final type = transaction['type'] as String;
-
-                  if (type == 'Transfer in' || type == 'Top-Up') {
-                    totalReceived += amount;
-                  } else if (type == 'Transfer out' || type == 'Payment') {
-                    totalSentPayment += amount;
-                  }
-                }
-
-                final totalAmount = totalReceived - totalSentPayment;
-                String formattedAmount = totalAmount > 0
-                    ? '+${_formatAmount(totalAmount)}'
-                    : '-${_formatAmount(totalAmount)}';
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Header untuk bulan
-                    Container(
-                      color: Colors.grey[200],
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: Row(
-                        children: [
-                          Text(
-                            displayMonth,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          Text(formattedAmount),
-                        ],
+            child: filteredTransactions.isEmpty
+                ? Center(
+                    child: Text(
+                      'No recent activity',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
                       ),
                     ),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.only(bottom: 128),
+                    controller: _scrollController,
+                    children: groupedTransactions.entries.map((entry) {
+                      final month = entry.key;
+                      final transactions = entry.value;
 
-                    // Daftar transaksi dalam bulan
-                    ...transactions.map((transaction) {
-                      final amount = transaction['amount'] as int;
-                      final date = (transaction['date'] as Timestamp).toDate();
-                      final type = transaction['type'] as String;
+                      final now = DateTime.now();
+                      final currentMonth = DateFormat('MMMM yyyy').format(now);
+                      final displayMonth =
+                          (month == currentMonth) ? 'This Month' : month;
 
-                      final additionalInfo =
-                          transaction['additionalInfo'] as String?;
-                      final description = transaction['description'] as String?;
-                      final partyName = transaction['partyName'] as String?;
-                      final note = transaction['note'] as String?;
+                      // Hitung total transaksi untuk bulan ini
+                      int totalReceived = 0;
+                      int totalSentPayment = 0;
 
-                      return TransactionItem(
-                        transactionId: transaction['id'],
-                        type: type,
-                        titleDisplay:
-                            (type.contains('Pay') && description != null)
-                                ? description
-                                : type,
-                        icon: (type.contains('out'))
-                            ? Icons.send
-                            : (type.contains('Pay'))
-                                ? Icons.shopping_cart_outlined
-                                : (type.contains('Top'))
-                                    ? Icons.add_circle
-                                    : Icons.arrow_downward,
-                        iconColor: Colors.blue,
-                        date: DateFormat('dd MMM yyyy • HH:mm').format(date),
-                        amount: (type == 'Transfer out') || (type == 'Payment')
-                            ? '-${_formatAmount(amount)}'
-                            : '+${_formatAmount(amount)}',
-                        description: description,
-                        partyName: partyName,
-                        note: note,
-                        additionalInfo: additionalInfo,
+                      for (var transaction in transactions) {
+                        final amount = transaction['amount'] as int;
+                        final type = transaction['type'] as String;
+
+                        if (type == 'Transfer in' || type == 'Top-Up') {
+                          totalReceived += amount;
+                        } else if (type == 'Transfer out' ||
+                            type == 'Payment') {
+                          totalSentPayment += amount;
+                        }
+                      }
+
+                      final totalAmount = totalReceived - totalSentPayment;
+                      String formattedAmount = totalAmount > 0
+                          ? '+${_formatAmount(totalAmount)}'
+                          : '-${_formatAmount(totalAmount)}';
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Header untuk bulan
+                          Container(
+                            color: Colors.grey[200],
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Row(
+                              children: [
+                                Text(
+                                  displayMonth,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Spacer(),
+                                Text(formattedAmount),
+                              ],
+                            ),
+                          ),
+
+                          // Daftar transaksi dalam bulan
+                          ...transactions.map((transaction) {
+                            final amount = transaction['amount'] as int;
+                            final date =
+                                (transaction['date'] as Timestamp).toDate();
+                            final type = transaction['type'] as String;
+
+                            final additionalInfo =
+                                transaction['additionalInfo'] as String?;
+                            final description =
+                                transaction['description'] as String?;
+                            final partyName =
+                                transaction['partyName'] as String?;
+                            final note = transaction['note'] as String?;
+
+                            return TransactionItem(
+                              transactionId: transaction['id'],
+                              type: type,
+                              titleDisplay:
+                                  (type.contains('Pay') && description != null)
+                                      ? description
+                                      : type,
+                              icon: (type.contains('out'))
+                                  ? Icons.send
+                                  : (type.contains('Pay'))
+                                      ? Icons.shopping_cart_outlined
+                                      : (type.contains('Top'))
+                                          ? Icons.add_circle
+                                          : Icons.arrow_downward,
+                              iconColor: Colors.blue,
+                              date: DateFormat('dd MMM yyyy • HH:mm')
+                                  .format(date),
+                              amount: (type == 'Transfer out') ||
+                                      (type == 'Payment')
+                                  ? '-${_formatAmount(amount)}'
+                                  : '+${_formatAmount(amount)}',
+                              description: description,
+                              partyName: partyName,
+                              note: note,
+                              additionalInfo: additionalInfo,
+                            );
+                          }),
+                        ],
                       );
-                    }),
-                  ],
-                );
-              }).toList(),
-            ),
+                    }).toList(),
+                  ),
           ),
 
           if (_isLoading)
