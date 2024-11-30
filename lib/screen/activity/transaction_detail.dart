@@ -331,102 +331,108 @@ class _DetailScreenState extends State<DetailScreen> {
                 const Divider(
                   height: 32,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = !_isExpanded; // Toggle expand/collapse
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Transaction Detail',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const Spacer(),
-                      Icon(
-                        _isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                      )
-                    ],
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isExpanded = !_isExpanded;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              const Text(
+                                'Transaction Detail',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const Spacer(),
+                              Icon(
+                                _isExpanded
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        if (_isExpanded) ...[
+                          Row(
+                            children: [
+                              const Text(
+                                'Transaction ID',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              const SizedBox(width: 6),
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(ClipboardData(
+                                      text: widget.transactionId));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Copied to clipboard: ${widget.transactionId}'),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.copy,
+                                  size: 16,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(widget.transactionId)
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          const Row(
+                            children: [
+                              Text(
+                                'Merchant Order ID',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              Spacer(),
+                              Text('•••JVu2'),
+                            ],
+                          ),
+                        ],
+                        if (widget.type.contains('Pay') &&
+                            widget.description!.contains('Voucher')) ...[
+                          const SizedBox(height: 32),
+                          Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                showVoucherPopup(context, widget.description,
+                                    widget.additionalInfo);
+                              },
+                              child: const PrettyQr(
+                                size: 100,
+                                data: 'Kopi Kenangan',
+                                errorCorrectLevel: QrErrorCorrectLevel.H,
+                                roundEdges: true,
+                                elementColor: Colors.black,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Center(
+                            child: Text(
+                              'View your QR Voucher here!',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 6),
-                if (_isExpanded) ...[
-                  Row(
-                    children: [
-                      const Text(
-                        'Transaction ID',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      const SizedBox(width: 6),
-                      GestureDetector(
-                        onTap: () {
-                          Clipboard.setData(
-                              ClipboardData(text: widget.transactionId));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Copied to clipboard: ${widget.transactionId}'),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
-                        child: const Icon(
-                          Icons.copy,
-                          size: 16,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(widget.transactionId)
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  const Row(
-                    children: [
-                      Text(
-                        'Merchant Order ID',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Spacer(),
-                      Text('•••JVu2')
-                    ],
-                  ),
-                ],
-                if (widget.type.contains('Pay') &&
-                    widget.description!.contains('Voucher')) ...[
-                  const SizedBox(height: 32),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        showVoucherPopup(
-                            context, widget.description, widget.additionalInfo);
-                      },
-                      // ignore: deprecated_member_use
-                      child: const PrettyQr(
-                        size: 100,
-                        data: 'Kopi Kenangan',
-                        errorCorrectLevel: QrErrorCorrectLevel.H,
-                        roundEdges: true,
-                        elementColor: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Center(
-                    child: Text(
-                      'View your QR Voucher here!',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-                const Spacer(),
                 Material(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
