@@ -43,6 +43,13 @@ class PurchaseMenu extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
+                child: _featureIcon(Icons.sim_card, 'Kuota', Colors.blue, () {
+                  Navigator.of(context)
+                      .push(createRoute(const KuotaScreen(), 2.0, 0));
+                }),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: _featureIcon(Icons.card_giftcard, 'Voucher', Colors.blue,
                     () {
                   Navigator.of(context)
@@ -54,13 +61,6 @@ class PurchaseMenu extends StatelessWidget {
                 child: _featureIcon(Icons.wallet, 'LinkPay', Colors.blue, () {
                   Navigator.of(context)
                       .push(createRoute(LinkPaySelectionPage(), 2.0, 0));
-                }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _featureIcon(Icons.sim_card, 'Kuota', Colors.blue, () {
-                  Navigator.of(context)
-                      .push(createRoute(KuotaScreen(), 2.0, 0));
                 }),
               ),
             ],
