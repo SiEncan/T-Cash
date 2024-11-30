@@ -188,7 +188,7 @@ class QRScannerState extends State<QRScanner> {
 
                     if (isValid) {
                       cameraController.stop();
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => TransferPage(uid: uid),
