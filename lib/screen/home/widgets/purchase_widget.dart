@@ -1,5 +1,6 @@
 import 'package:fintar/screen/home/screens/applezone/applezone_screen.dart';
 import 'package:fintar/screen/home/screens/discount_voucher/voucher_screen.dart';
+import 'package:fintar/screen/home/screens/kuota/kuota_screen.dart';
 import 'package:fintar/screen/home/screens/linkpay/linkpay_screen.dart';
 import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
@@ -56,9 +57,9 @@ class PurchaseMenu extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                    _featureIcon(Icons.line_axis, 'Investasi', Colors.blue, () {
-                  // gesture
+                child: _featureIcon(Icons.sim_card, 'Kuota', Colors.blue, () {
+                  Navigator.of(context)
+                      .push(createRoute(KuotaScreen(), 2.0, 0));
                 }),
               ),
             ],
