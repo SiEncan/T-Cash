@@ -179,6 +179,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       'blibli': 'img/blibli.png',
                       'Tiket': 'img/tiket.png',
                       'Traveloka': 'img/traveloka.png',
+                      'Steam': 'img/Steam_logo.png',
+                      'Mobile Legend': 'img/mobile_legend.png',
+                      'Free Fire': 'img/free_fire.jpg',
                     };
 
                     for (final entry in assetMap.entries) {

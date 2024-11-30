@@ -55,6 +55,18 @@ class TransactionDetailsModal extends StatelessWidget {
         12, (index) => characters[random.nextInt(characters.length)]).join();
   }
 
+  String generateSteamWalletCode() {
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final Random random = Random();
+
+    String generateSegment(int length) {
+      return List.generate(
+          length, (index) => chars[random.nextInt(chars.length)]).join();
+    }
+
+    return '${generateSegment(4)}-${generateSegment(4)}-${generateSegment(4)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     // The body should return a widget here.
@@ -128,41 +140,64 @@ class TransactionDetailsModal extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            Text(
-                              serviceName.contains('PLN')
-                                  ? 'Meter Number'
-                                  : serviceName.contains('Pulsa') ||
-                                          serviceName.contains('Top-Up') ||
-                                          serviceName.contains('Kuota')
-                                      ? 'Phone Number'
-                                      : (serviceName.contains('iCloud') ||
-                                              serviceName.contains('Apple'))
-                                          ? 'ICloud E-Mail'
-                                          : (serviceName.contains(
-                                                      'Mobile Legend') ||
-                                                  serviceName
-                                                      .contains('Free Fire'))
-                                              ? 'User ID and Server ID'
-                                              : 'Expiry Date',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              (expiryDate?.isNotEmpty == true
-                                      ? expiryDate
-                                      : recipientInfo) ??
-                                  '-',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color.fromARGB(255, 57, 57, 57),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
+                            [
+                              'PLN',
+                              'Pulsa',
+                              'Top-Up',
+                              'Kuota',
+                              'iCloud',
+                              'Apple',
+                              'Mobile Legend',
+                              'Free Fire',
+                              'Voucher'
+                            ].any(serviceName.contains)
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        {
+                                          'PLN': 'Meter Number',
+                                          'Pulsa': 'Phone Number',
+                                          'Top-Up': 'Phone Number',
+                                          'Kuota': 'Phone Number',
+                                          'iCloud': 'ICloud E-Mail',
+                                          'Apple': 'ICloud E-Mail',
+                                          'Mobile Legend':
+                                              'User ID and Server ID',
+                                          'Free Fire': 'User ID and Server ID',
+                                          'Voucher': 'Expiry Date',
+                                        }
+                                            .entries
+                                            .firstWhere(
+                                              (entry) => serviceName
+                                                  .contains(entry.key),
+                                              orElse: () =>
+                                                  const MapEntry('', ''),
+                                            )
+                                            .value,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600]),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        (expiryDate?.isNotEmpty == true
+                                                ? expiryDate
+                                                : recipientInfo) ??
+                                            '-',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                              Color.fromARGB(255, 57, 57, 57),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
                             const Divider(height: 30, color: Colors.grey),
                             Text(
                               'Purchase Detail',
@@ -399,27 +434,36 @@ class TransactionDetailsModal extends StatelessWidget {
               await saldoService.reduceSaldo(userId, amount);
 
           if (isSaldoSufficient) {
-            String voucherId = '';
-            if (serviceName.contains('Voucher')) {
-              voucherId = generateVoucherId();
-            }
+            String voucherId =
+                serviceName.contains('Voucher') ? generateVoucherId() : '';
+            String steamWallet =
+                serviceName.contains('Steam') ? generateSteamWalletCode() : '';
+
+            String additionalInfo = () {
+              if (serviceName.contains('Pulsa') ||
+                  serviceName.contains('Top-Up') ||
+                  serviceName.contains('Kuota')) {
+                return 'Nomor Tujuan: $recipientInfo';
+              } else if (serviceName.contains('PLN')) {
+                return 'Meter Number: $recipientInfo';
+              } else if (serviceName.contains('Voucher')) {
+                return 'Voucher ID: $voucherId';
+              } else if (serviceName.contains('Mobile Legends') ||
+                  serviceName.contains('Free Fire')) {
+                return 'User ID and Server ID: $recipientInfo';
+              } else if (serviceName.contains('Steam')) {
+                return 'Steam Wallet Code: $steamWallet';
+              } else {
+                return 'iCloud E-Mail: $recipientInfo';
+              }
+            }();
+
             await transactionService.saveTransaction(
               userId,
               'Payment',
               amount: amount,
               description: serviceName,
-              additionalInfo: serviceName.contains('Pulsa') ||
-                      serviceName.contains('Top-Up') ||
-                      serviceName.contains('Kuota')
-                  ? 'Nomor Tujuan: $recipientInfo'
-                  : serviceName.contains('PLN')
-                      ? 'Meter Number: $recipientInfo'
-                      : serviceName.contains('Voucher')
-                          ? 'Voucher ID: $voucherId'
-                          : serviceName.contains('Mobile Legends') ||
-                                  serviceName.contains('Free Fire')
-                              ? 'User ID and Server ID : $recipientInfo'
-                              : 'iCloud E-Mail: $recipientInfo',
+              additionalInfo: additionalInfo,
             );
 
             Navigator.pop(context);

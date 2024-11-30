@@ -5,6 +5,7 @@ import 'package:fintar/screen/home/screens/kuota/kuota_screen.dart';
 import 'package:fintar/screen/home/screens/linkpay/linkpay_screen.dart';
 import 'package:fintar/screen/home/screens/pln/pln_screen.dart';
 import 'package:fintar/screen/home/screens/pulsa/pulsa_screen.dart';
+import 'package:fintar/screen/home/screens/steam/steam_screen.dart';
 import 'package:fintar/widgets/custom_page_transition.dart';
 import 'package:flutter/material.dart';
 
@@ -91,8 +92,9 @@ class PurchaseMenu extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: _featureIcon(Icons.gavel, 'Beli Emas', Colors.blue, () {
-                  // gesture
+                child: _featureIcon(Icons.computer, 'Steam', Colors.blue, () {
+                  Navigator.of(context)
+                      .push(createRoute(const SteamScreen(), 2.0, 0));
                 }),
               ),
             ],
