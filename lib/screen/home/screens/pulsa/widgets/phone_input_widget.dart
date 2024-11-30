@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class PhoneNumberInput extends StatefulWidget {
@@ -161,6 +162,16 @@ class PhoneNumberInputState extends State<PhoneNumberInput> {
                         }
 
                         return TextField(
+                          maxLength: 13,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          buildCounter: (_,
+                              {required currentLength,
+                              maxLength,
+                              required isFocused}) {
+                            return null; // Hide character counter
+                          },
                           controller: widget.phoneNumberController,
                           decoration: InputDecoration(
                             hintText: '08*********',

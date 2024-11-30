@@ -1,5 +1,6 @@
 import 'package:fintar/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'create_account2.dart';
 
 class CreateAccountPage1 extends StatefulWidget {
@@ -103,6 +104,11 @@ class CreateAccountPage1State extends State<CreateAccountPage1> {
 
                 TextField(
                   controller: emailController,
+                  maxLength: 20,
+                  buildCounter: (_,
+                      {required currentLength, maxLength, required isFocused}) {
+                    return null; // Hide character counter
+                  },
                   decoration: InputDecoration(
                     hintText: 'Enter your email',
                     hintStyle: TextStyle(

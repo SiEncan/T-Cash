@@ -35,6 +35,14 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
             const SizedBox(height: 40),
             // Input Nama Lengkap
             TextField(
+              maxLength: 30,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+              ],
+              buildCounter: (_,
+                  {required currentLength, maxLength, required isFocused}) {
+                return null; // Hide character counter
+              },
               controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Full Name',
@@ -54,6 +62,11 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
             // Input Alamat
             TextField(
               controller: addressController,
+              maxLength: 30,
+              buildCounter: (_,
+                  {required currentLength, maxLength, required isFocused}) {
+                return null; // Hide character counter
+              },
               decoration: InputDecoration(
                 labelText: 'Address',
                 hintText: 'Enter your address',
@@ -71,6 +84,11 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
 
             // Input Nomor Telepon
             TextField(
+              maxLength: 13,
+              buildCounter: (_,
+                  {required currentLength, maxLength, required isFocused}) {
+                return null; // Hide character counter
+              },
               controller: phoneNumberController,
               keyboardType: TextInputType.phone,
               inputFormatters: [
