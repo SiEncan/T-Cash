@@ -89,6 +89,11 @@ class TopUpBalanceState extends State<TopUpBalance> {
                 ),
                 const SizedBox(height: 10),
                 TextField(
+                  maxLength: 13,
+                  buildCounter: (_,
+                      {required currentLength, maxLength, required isFocused}) {
+                    return null; // Hide character counter
+                  },
                   controller: _amountController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(

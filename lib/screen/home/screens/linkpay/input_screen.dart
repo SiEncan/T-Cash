@@ -169,6 +169,7 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
                         horizontal: 12,
                       ),
                     ),
+                    maxLength: 13,
                     buildCounter: (_,
                         {required currentLength,
                         maxLength,
@@ -205,6 +206,13 @@ class _VirtualAccountInputPageState extends State<TransferToServiceScreen> {
                     const SizedBox(height: 8),
                     TextField(
                       controller: amountController,
+                      maxLength: 13,
+                      buildCounter: (_,
+                          {required currentLength,
+                          maxLength,
+                          required isFocused}) {
+                        return null; // Hide character counter
+                      },
                       keyboardType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,

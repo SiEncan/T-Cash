@@ -184,6 +184,13 @@ class _TransferPageState extends State<TransferPage> {
                         ),
                         const SizedBox(height: 8),
                         TextField(
+                          maxLength: 13,
+                          buildCounter: (_,
+                              {required currentLength,
+                              maxLength,
+                              required isFocused}) {
+                            return null; // Hide character counter
+                          },
                           controller: amountController,
                           keyboardType: TextInputType.number,
                           inputFormatters: [

@@ -98,6 +98,11 @@ class SendMoneyScreenState extends State<SendMoneyScreen> {
                   ],
                 ),
                 child: TextField(
+                  maxLength: 13,
+                  buildCounter: (_,
+                      {required currentLength, maxLength, required isFocused}) {
+                    return null; // Hide character counter
+                  },
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(

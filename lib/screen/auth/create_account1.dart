@@ -104,7 +104,7 @@ class CreateAccountPage1State extends State<CreateAccountPage1> {
 
                 TextField(
                   controller: emailController,
-                  maxLength: 20,
+                  maxLength: 50,
                   buildCounter: (_,
                       {required currentLength, maxLength, required isFocused}) {
                     return null; // Hide character counter

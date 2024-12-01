@@ -1,6 +1,7 @@
 import 'package:fintar/screen/auth/enter_curr_passcode.dart';
 import 'package:fintar/screen/auth/passcode_create.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -164,6 +165,18 @@ class _UserProfileState extends State<UserProfile> {
           content: TextField(
             controller: controller,
             decoration: InputDecoration(hintText: 'Enter new $title'),
+            maxLength: field == 'phone'
+                ? 13
+                : field == 'email'
+                    ? 50
+                    : 30,
+            inputFormatters: field == 'phone'
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : [],
+            buildCounter: (_,
+                {required currentLength, maxLength, required isFocused}) {
+              return null; // Hide character counter
+            },
           ),
           actions: [
             TextButton(
@@ -306,7 +319,7 @@ class _UserProfileState extends State<UserProfile> {
     return
         // Change passcode option
         Container(
-      margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
+      margin: const EdgeInsets.only(left: 12, right: 12, bottom: 10, top: 10),
       decoration: BoxDecoration(
         color: Colors.blue,
         borderRadius: BorderRadius.circular(8),

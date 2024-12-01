@@ -59,6 +59,11 @@ class BottomSheetContentState extends State<BottomSheetContent> {
           const SizedBox(height: 20),
           TextField(
             controller: _emailController,
+            maxLength: 50,
+            buildCounter: (_,
+                {required currentLength, maxLength, required isFocused}) {
+              return null; // Hide character counter
+            },
             decoration: InputDecoration(
               hintText: 'Enter your ICloud E-Mail',
               prefixIcon: const Icon(

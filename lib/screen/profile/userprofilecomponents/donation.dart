@@ -128,6 +128,13 @@ class _DonationHubState extends State<DonationHub> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
+                    maxLength: 13,
+                    buildCounter: (_,
+                        {required currentLength,
+                        maxLength,
+                        required isFocused}) {
+                      return null; // Hide character counter
+                    },
                     controller: _donationController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
