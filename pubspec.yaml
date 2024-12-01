@@ -28,6 +28,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "img/logos.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#00c5ff"
+  adaptive_icon_foreground: "img/logos.png"
+
 flutter_native_splash:
   color: "#1A87DD"
   image: "img/T-Cash_Logo.png"
@@ -57,6 +65,7 @@ dependencies:
   pretty_qr_code: ^3.3.0
   camera: ^0.11.0+2
   provider: ^6.1.2
+  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:

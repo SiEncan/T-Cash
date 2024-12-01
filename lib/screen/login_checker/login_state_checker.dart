@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fintar/screen/auth/welcome_screen.dart';
 import 'package:fintar/widgets/bottom_navigation.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class LoginStateChecker extends StatefulWidget {
+  const LoginStateChecker({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _SplashScreenState createState() => _SplashScreenState();
+  _LoginStateCheckerState createState() => _LoginStateCheckerState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _LoginStateCheckerState extends State<LoginStateChecker> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
