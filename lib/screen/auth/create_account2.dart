@@ -178,6 +178,9 @@ class _CreateAccountPage2State extends State<CreateAccountPage2> {
                     'saldo': 0
                   });
 
+                  // Logout pengguna setelah pembuatan akun
+                  await FirebaseAuth.instance.signOut();
+
                   // Navigasi ke halaman utama setelah berhasil
                   Navigator.pushAndRemoveUntil(
                     context,
