@@ -4,7 +4,7 @@ A mobile e-wallet application built with **Flutter** for **Android**.
 This project was developed as my **first large-scale mobile programming project**, as part of a **university assignment for the Mobile Programming course**.
 
 <div align=center>
-  <a href="img/tcash-home.png">
+  <a href="img/tcash-welcome.png">
     <img src="img/tcash-welcome.png" alt="Preview" width="300"/>
   </a>
   <a href="img/tcash-home.png">
