@@ -13,7 +13,7 @@ This project was developed as my **first large-scale mobile programming project*
 </div>
 
 For full documentation including images and videos, you can visit my portfolio:  
-[Click Me!](https://portfolio-adnanalvito.vercel.app/projects/2)
+[Click Me!](https://adnanalvito.vercel.app/projects/2)
 
 ---
 
